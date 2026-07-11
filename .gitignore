@@ -1,0 +1,8 @@
+# mrp-June holds drafts/reference material that isn't part of the live site.
+# Everything in mrp-June is ignored except mrp-June/images, which the pages
+# load images from.
+mrp-June/*
+!mrp-June/images/
+
+# Claude Code's local, machine-specific settings — not part of the site.
+.claude/settings.local.json

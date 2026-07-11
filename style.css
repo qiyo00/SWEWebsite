@@ -1,0 +1,1564 @@
+/* =========================================================
+   SWE Learning Module — Style Guide (Light Mode)
+   ========================================================= */
+
+:root {
+  /* Background */
+  --bg: #F0F5F5;
+  --bg-mid: #F5FAFA;
+  --card: #FFFFFF;
+  --card-hover: #E8F0EF;
+
+  /* Text */
+  --text-1: #0F1F1E;
+  --text-2: #505252;
+  --text-3: #334E4D;
+
+  /* Teal accent */
+  --accent-bg: #E0F2F0;
+  --accent-light: #7BBDB8;
+  --accent: #0C7A70;
+  --accent-dim: #085C54;
+
+  /* Border */
+  --border: #C8D8D7;
+  --border-hover: #A0BFBD;
+
+  /* Other accents (tbd) */
+  --accent-amber: #9B6400;
+  --accent-amber-bg: #F5E6C8;
+  --accent-violet: #5B4AAF;
+  --accent-violet-bg: #E5E0F7;
+  --accent-blue: #1D6FA4;
+  --accent-blue-bg: #D6E8F5;
+  --accent-rose: #A3344A;
+  --accent-rose-bg: #F5D5DC;
+
+
+
+  /* Fonts */
+  --font-heading: 'Source Serif 4', Georgia, serif;
+  --font-body: 'Inter', sans-serif;
+  --font-equation: 'Cambria Math', Cambria, serif;
+
+  /* Type scale */
+  --fs-h1: 40px;
+  --fs-h2: 24px;
+  --fs-body: 15px;
+  --fs-body-sm: 12px;
+  --fs-label: 10px;
+  --fs-caption: 10px;
+  --fs-nav-logo: 13px;
+  --fs-button: 12px;
+  --fs-formula: 20px;
+
+  /* Layout */
+  --nav-height: 64px;
+  --drawer-width: 200px;
+  --ref-panel-width: 280px;
+  --content-max-width: 760px;
+
+  /* Misc */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition: 0.2s ease;
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  color: var(--text-2);
+  background-color: var(--bg);
+  line-height: 1.6;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------- Typography ---------- */
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  color: var(--text-1);
+}
+
+h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.3;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.body-text {
+  font-size: var(--fs-body);
+  color: var(--text-3);
+}
+
+.body-text-sm {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+}
+
+.caption {
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+}
+
+.formula {
+  font-family: var(--font-equation);
+  font-size: var(--fs-formula);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+/* ---------- Layout helpers ---------- */
+.wrap {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* =========================================================
+   Navbar
+   ========================================================= */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--bg-mid);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-body);
+  font-size: var(--fs-nav-logo);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+.nav-logo-icon {
+  display: block;
+  width: auto;
+  height: 81px;
+  transition: transform var(--transition);
+}
+
+.nav-logo:hover .nav-logo-icon {
+  transform: scale(1.08);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links a {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+  transition: color var(--transition);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-1);
+}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: var(--fs-button);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+/* Primary button */
+.btn-primary {
+  padding: 11px 24px;
+  background: var(--accent);
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background: var(--accent-dim);
+}
+
+.btn-primary:disabled {
+  background: var(--border-hover);
+  color: var(--accent-bg);
+}
+
+/* Ghost button */
+.btn-ghost {
+  padding: 11px 20px;
+  background: transparent;
+  color: var(--text-3);
+  border-color: var(--border-hover);
+}
+
+.btn-ghost:hover {
+  background: var(--card-hover);
+  color: var(--text-1);
+  border-color: var(--accent-light);
+}
+
+.btn-ghost:disabled {
+  color: var(--border-hover);
+  border-color: var(--border);
+}
+
+/* Next section button */
+.btn-next {
+  padding: 9px 18px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--accent-light);
+}
+
+.btn-next:hover {
+  background: #C8E8E4;
+  color: var(--accent-dim);
+  border-color: var(--accent);
+}
+
+.btn-next:disabled {
+  background: var(--bg);
+  color: var(--border-hover);
+  border-color: var(--border);
+}
+
+/* Drawer / panel slider buttons (36x36) */
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.icon-btn:hover {
+  background: var(--card-hover);
+  border-color: var(--border-hover);
+}
+
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* =========================================================
+   Hero (Home)
+   ========================================================= */
+.hero {
+  padding: 4rem 0 2rem;
+}
+
+.hero-heading {
+  margin-bottom: 1.75rem;
+}
+
+.hero-grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.hero-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-media {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero h1 {
+  margin: 0.75rem 0 0;
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.hero .body-text {
+  max-width: 52ch;
+  margin-bottom: 1.75rem;
+}
+
+.hero-figure {
+  margin: 0;
+}
+
+/* ---- Hero illustration (heart + wave animation) ---- */
+.hero-media {
+  cursor: pointer;
+}
+
+.hero-illustration {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-illustration #main {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hero-media:hover .hero-illustration #main {
+  animation: heroHeartbeat 1.1s ease-in-out infinite;
+}
+
+@keyframes heroHeartbeat {
+  0% {
+    transform: scale(1);
+  }
+
+  18% {
+    transform: scale(1.015);
+  }
+
+  32% {
+    transform: scale(1);
+  }
+
+  55% {
+    transform: scale(1.01);
+  }
+
+  72% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-media:hover .hero-illustration #main {
+    animation: none;
+  }
+}
+
+/* ---- Tutorial help button ----
+   Matches the rendered height of .btn-primary/.btn-ghost in the same
+   row (11px vertical padding + 1px border + a 12px/1.6 line box =
+   43.2px) so the circle lines up with the pill buttons beside it. */
+.help-btn {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  width: 43.2px;
+  height: 43.2px;
+}
+
+/* =========================================================
+   Panel / Block
+   ========================================================= */
+.panel {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.125rem;
+  background: var(--bg-mid);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.panel-label {
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.panel-tags {
+  display: flex;
+  gap: 6px;
+}
+
+.panel-body {
+  padding: 1.125rem;
+}
+
+/* =========================================================
+   Learning Objectives (Home)
+   ========================================================= */
+.learning-objectives h2 {
+  margin: 0.5rem 0 1.25rem;
+}
+
+.objectives-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.objective-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.125rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.objective-item:last-child {
+  border-bottom: none;
+}
+
+.objective-marker {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: 0.4rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-hover);
+}
+
+/* =========================================================
+   Tags
+   ========================================================= */
+.tag {
+  display: inline-block;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 2px 7px;
+}
+
+/* =========================================================
+   Module cards (Home)
+   ========================================================= */
+.modules h2 {
+  margin: 0.5rem 0 1.25rem;
+}
+
+.sections-overview h2 {
+  margin: 0.5rem 0 1.25rem;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.module-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  border-top: 3px solid var(--accent);
+  padding: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: background var(--transition);
+}
+
+.module-card:hover {
+  background: var(--card-hover);
+}
+
+.module-card.active {
+  background: var(--accent-bg);
+  border-top-color: var(--accent);
+}
+
+.module-card.active:hover {
+  background: #C8E8E4;
+}
+
+.module-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.module-icon {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-md);
+  object-fit: contain;
+  transition: transform var(--transition);
+}
+
+.module-card:hover .module-icon {
+  transform: scale(1.08);
+}
+
+.module-card-heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.module-label {
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.module-card h3 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-1);
+}
+
+/* =========================================================
+   Footer
+   ========================================================= */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  margin-top: 2.5rem;
+}
+
+.site-footer p {
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+  text-align: center;
+}
+
+/* =========================================================
+   Module page layout
+   ========================================================= */
+.module-layout {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* ---- Left navigation drawer ---- */
+.nav-drawer {
+  position: sticky;
+  top: var(--nav-height);
+  height: calc(100vh - var(--nav-height));
+  width: var(--drawer-width);
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg-mid);
+  overflow-y: auto;
+  transition: width var(--transition);
+}
+
+.nav-drawer.closed {
+  width: 0;
+  overflow: hidden;
+  border-right: none;
+}
+
+/* Toggle button lives outside the drawer so it is never clipped by
+   the drawer's overflow:hidden when collapsed. */
+.drawer-toggle {
+  position: fixed;
+  top: calc(var(--nav-height) + 1rem);
+  left: calc(var(--drawer-width) - 18px);
+  z-index: 296;
+  transition: left var(--transition);
+}
+
+.drawer-toggle.collapsed {
+  left: 6px;
+}
+
+/* Tooltip on the collapsed toggle buttons: a small floating label
+   naming what's inside, not the content itself — so it can't conflict
+   with open/close state the way expanding the real drawer/panel did.
+   Pure CSS, no JS: it only ever shows/hides on :hover/:focus-visible
+   and never touches the .closed class. No need to set position here —
+   both .drawer-toggle and .ref-toggle are already position:fixed,
+   which already establishes a containing block for the ::after below;
+   redeclaring position at equal specificity would just be a coin-flip
+   in the cascade over which rule wins. */
+.nav-drawer.closed [data-tooltip]::after,
+.ref-panel.closed [data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(15, 31, 30, 0.9);
+  color: #fff;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition);
+  pointer-events: none;
+  z-index: 297;
+}
+
+.nav-drawer.closed [data-tooltip]::after {
+  left: calc(100% + 10px);
+}
+
+.ref-panel.closed [data-tooltip]::after {
+  right: calc(100% + 10px);
+}
+
+.nav-drawer.closed [data-tooltip]:hover::after,
+.nav-drawer.closed [data-tooltip]:focus-visible::after,
+.ref-panel.closed [data-tooltip]:hover::after,
+.ref-panel.closed [data-tooltip]:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer-nav {
+  padding: 1.5rem 1.25rem;
+  white-space: nowrap;
+}
+
+.drawer-title {
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 0.75rem;
+}
+
+.drawer-nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.drawer-nav li a {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.6rem 0.5rem;
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+  line-height: 1.4;
+  white-space: normal;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+}
+
+.drawer-nav li a:hover {
+  background: var(--card-hover);
+}
+
+.drawer-nav li a.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.drawer-bullet {
+  width: 8px;
+  height: 8px;
+  margin-top: 0.3em;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-hover);
+  flex-shrink: 0;
+}
+
+.drawer-nav li a.active .drawer-bullet {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---- Main content ---- */
+.module-main {
+  flex: 1;
+  min-width: 0;
+  padding: 2.5rem 3rem;
+}
+
+/* ---- Module-wide introduction (module3-1.html only) ---- */
+.module-intro {
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.module-intro h1 {
+  margin: 0.75rem 0 1rem;
+}
+
+.module-intro .body-text {
+  max-width: 62ch;
+}
+
+.sections-panel {
+  margin-top: 1.5rem;
+  max-width: 420px;
+}
+
+.section-list li {
+  border-bottom: 1px solid var(--border);
+}
+
+.section-list li:last-child {
+  border-bottom: none;
+}
+
+.section-list-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.125rem;
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+  transition: background var(--transition), color var(--transition);
+}
+
+.section-list-link:hover {
+  background: var(--card-hover);
+  color: var(--text-1);
+}
+
+.bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-hover);
+  flex-shrink: 0;
+}
+
+.module-section {
+  padding-bottom: 1.5rem;
+}
+
+.module-section h2 {
+  margin: 0.5rem 0 1rem;
+}
+
+.module-section .body-text {
+  margin-bottom: 1rem;
+}
+
+.interactive-panel {
+  margin: 1.5rem 0;
+}
+
+.interactive-panel .panel-body {
+  min-height: 160px;
+}
+
+/* =========================================================
+   Wave Types Interactive (module 3-1)
+   ========================================================= */
+.wave-row {
+  margin-bottom: 1rem;
+}
+
+.wave-row-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.wave-row-label {
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+}
+
+.wave-row-speed {
+  font-family: var(--font-equation);
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+}
+
+/* A plain HTML row instead of on-canvas text/arrow — it sits above the
+   dot grid entirely, so it's never competing for space or contrast
+   with the animated dots. */
+.wave-propagation-note {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.wave-propagation-arrow {
+  flex: 1;
+  min-width: 24px;
+  height: 2px;
+  background: var(--accent-bg);
+  position: relative;
+}
+
+.wave-propagation-arrow::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-right: 0;
+  border-left: 6px solid var(--accent-bg);
+}
+
+.wave-row[data-wave="compressional"] .wave-propagation-arrow {
+  background: var(--accent-violet-bg);
+}
+
+.wave-row[data-wave="compressional"] .wave-propagation-arrow::after {
+  border-left-color: var(--accent-violet-bg);
+}
+
+.wave-canvas {
+  width: 100%;
+  height: 140px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--border);
+}
+
+.wave-canvas-caption {
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+  margin-top: 0.5rem;
+}
+
+.wave-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.wave-play-toggle {
+  flex-shrink: 0;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.wave-slider-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.wave-slider-labels {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: var(--fs-body-sm);
+  color: var(--text-3);
+  margin-bottom: 0.4rem;
+}
+
+.wave-slider-labels span:last-child {
+  font-weight: 600;
+}
+
+/* Soft/medium/stiff each get their own color so the label's color
+   itself hints at where the slider sits, not just its text. Medium is
+   a literal blend of the soft and stiff colors — a midpoint, not a
+   separate palette color — so it stays visually "between" as the
+   slider moves. */
+#stiffnessValueLabel[data-level="soft"] {
+  color: var(--accent);
+}
+
+#stiffnessValueLabel[data-level="medium"] {
+  color: color-mix(in srgb, var(--accent), var(--accent-amber));
+}
+
+#stiffnessValueLabel[data-level="stiff"] {
+  color: var(--accent-amber);
+}
+
+/* Slider — 3px track, 13px thumb, 15% accent ring on hover/focus,
+   per the style guide's SLIDER spec. */
+.wave-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.wave-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(12, 122, 112, 0.15);
+  transition: box-shadow var(--transition);
+  cursor: pointer;
+}
+
+.wave-slider:hover::-webkit-slider-thumb,
+.wave-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(12, 122, 112, 0.15);
+}
+
+.wave-slider::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(12, 122, 112, 0.15);
+  transition: box-shadow var(--transition);
+  cursor: pointer;
+}
+
+.wave-slider:hover::-moz-range-thumb,
+.wave-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(12, 122, 112, 0.15);
+}
+
+.wave-slider::-moz-range-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.wave-slider-endpoints {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+  margin-top: 0.35rem;
+}
+
+.wave-note {
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+  margin-top: 0.85rem;
+}
+
+@media (max-width: 520px) {
+  .wave-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ---- Section nav (back to top / next section) ---- */
+.section-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+/* ---- Right reference panel ---- */
+.ref-panel {
+  position: sticky;
+  top: var(--nav-height);
+  height: calc(100vh - var(--nav-height));
+  width: var(--ref-panel-width);
+  flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg-mid);
+  overflow-y: auto;
+  transition: width var(--transition);
+}
+
+.ref-panel.closed {
+  width: 0;
+  overflow: hidden;
+  border-left: none;
+}
+
+/* Toggle button lives outside the panel so it is never clipped by
+   the panel's overflow:hidden when collapsed. */
+.ref-toggle {
+  position: fixed;
+  top: calc(var(--nav-height) + 1rem);
+  right: calc(var(--ref-panel-width) - 18px);
+  z-index: 296;
+  transition: right var(--transition);
+}
+
+.ref-toggle.collapsed {
+  right: 6px;
+}
+
+.ref-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  background: var(--bg-mid);
+  border-bottom: 1px solid var(--border);
+}
+
+.ref-tab {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.ref-tab:hover {
+  color: var(--text-1);
+}
+
+.ref-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.ref-panel-content {
+  padding: 1.25rem;
+}
+
+/* =========================================================
+   Callout boxes
+   ========================================================= */
+.callout {
+  border-left: 2px solid var(--accent);
+  background: var(--accent-bg);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 1.5rem 0;
+}
+
+.callout-label {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.callout-text {
+  font-size: var(--fs-body);
+  color: var(--text-3);
+}
+
+.callout-highlight {
+  border-left-color: var(--accent-amber);
+  background: var(--accent-amber-bg);
+}
+
+.callout-highlight .callout-label {
+  color: var(--accent-amber);
+}
+
+.callout-notes {
+  border-left-color: var(--accent-violet);
+  background: var(--accent-violet-bg);
+}
+
+.callout-notes .callout-label {
+  color: var(--accent-violet);
+}
+
+/* =========================================================
+   Module content: subsection headings
+   ========================================================= */
+.module-section .intro-text {
+  padding-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.module-section h3 {
+  font-size: 19px;
+  margin: 2.25rem 0 0.75rem;
+}
+
+.module-section h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  color: var(--text-1);
+  margin: 1.75rem 0 0.5rem;
+}
+
+/* =========================================================
+   Figure / image placeholders
+   ========================================================= */
+.figure-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 160px;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px dashed var(--border-hover);
+  border-radius: var(--radius-md);
+  background: var(--bg-mid);
+  text-align: center;
+}
+
+.figure-placeholder.has-image {
+  border-style: solid;
+}
+
+.figure-placeholder.has-image .figure-caption {
+  align-self: stretch;
+  max-width: none;
+  text-align: left;
+}
+
+.figure-caption-label {
+  color: var(--text-1);
+}
+
+.figure-image {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  display: block;
+}
+
+.figure-label {
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.figure-caption {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+  max-width: 52ch;
+}
+
+/* =========================================================
+   Formula display block
+   ========================================================= */
+.formula-block {
+  margin: 1.25rem 0;
+  padding: 0.75rem 0;
+  text-align: center;
+}
+
+/* =========================================================
+   Comparison table (summary callouts)
+   ========================================================= */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.compare-table th,
+.compare-table td {
+  text-align: left;
+  font-size: var(--fs-body-sm);
+  color: var(--text-3);
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.compare-table th {
+  color: var(--text-1);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Reference panel: equations & glossary
+   ========================================================= */
+.eq-item {
+  margin-bottom: 1.25rem;
+}
+
+.eq-item:last-child {
+  margin-bottom: 0;
+}
+
+.eq-name {
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 0.35rem;
+}
+
+.eq-formula {
+  font-family: var(--font-equation);
+  font-size: var(--fs-formula);
+  color: var(--accent-dim);
+  margin-bottom: 0.35rem;
+}
+
+.eq-note {
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+}
+
+.glossary-item {
+  margin-bottom: 1rem;
+}
+
+.glossary-item:last-child {
+  margin-bottom: 0;
+}
+
+.glossary-term {
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 0.25rem;
+}
+
+.glossary-def {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+}
+
+.sources-note {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+  font-style: italic;
+}
+
+/* =========================================================
+   Drawer/panel backdrops (mobile overlay only)
+   ========================================================= */
+.nav-backdrop,
+.ref-backdrop {
+  display: none;
+}
+
+/* =========================================================
+   Guided tour overlay (home page tutorial)
+   ========================================================= */
+.tour-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 14, 13, 0.72);
+  z-index: 400;
+  cursor: pointer;
+}
+
+.tour-overlay[hidden] {
+  display: none;
+}
+
+body.tour-active [data-tour] {
+  position: relative;
+  z-index: 401;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.85), 0 0 24px rgba(255, 255, 255, 0.35);
+}
+
+/* Elements that are normally transparent (the ghost button, the plain
+   nav links) get lifted above the overlay along with everything else
+   in [data-tour], but with nothing opaque of their own, their
+   "transparent" background reveals the dark overlay sitting right
+   behind them instead of the light page underneath — the framed area
+   ends up looking just as masked as everywhere else. Giving them an
+   opaque backer while spotlighted makes the whole framed box read as
+   truly unmasked, not just the text drawn on top of it. */
+body.tour-active .btn-ghost[data-tour],
+body.tour-active .navbar [data-tour] {
+  background: var(--card);
+}
+
+/* .navbar's `position: sticky` makes it a stacking context in
+   practice (browsers do this even at z-index: auto, despite the
+   spec's on-paper wording), which traps its children below the
+   overlay even when they're given z-index: 401 — a child's z-index
+   only competes within its own stacking context, so the spotlighted
+   nav-logo/nav-link would render *through* the overlay (dim, muted)
+   instead of above it. Lifting the whole navbar's z-index above the
+   overlay "fixes" that but un-dims the entire header bar along with
+   it, not just the two spotlighted items. Dropping position to static
+   removes the stacking context outright (z-index only affects
+   positioned elements), so the navbar stays under the overlay by
+   normal DOM order like the rest of the page, while each spotlighted
+   child's own z-index: 401 now competes directly against the overlay
+   at the root level and wins. Sticky scrolling is paused for the
+   handful of seconds the tour is open, which is an acceptable trade. */
+body.tour-active .navbar {
+  position: static;
+}
+
+/* The hero button row and the module grid can wrap their items onto a
+   new line at narrow widths. Reserve room below each item for its
+   label there so a wrapped item doesn't land on top of the previous
+   item's label. (Not applied navbar-wide: the navbar never wraps, and
+   its items are vertically centered, where a bottom margin would just
+   push them upward out of view.) */
+body.tour-active .button-row [data-tour],
+body.tour-active .module-grid [data-tour] {
+  margin-bottom: 4.5rem;
+}
+
+body.tour-active [data-tour]::after {
+  content: attr(data-tour);
+  position: absolute;
+  /* Sized to the spotlighted element's own box (not a fixed max-content
+     width) so neighboring labels wrap within their own column instead
+     of spilling into each other — elements never overlap, so their
+     same-width labels can't either. */
+  left: 0;
+  right: 0;
+  top: calc(100% + 12px);
+  color: #ffffff;
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-transform: lowercase;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  z-index: 402;
+}
+
+/* The logo is much narrower than its label — anchor the label to the
+   logo's left edge and let it grow rightward (into the empty space
+   before the next nav item) instead of being squeezed to ~30px wide. */
+body.tour-active .nav-logo[data-tour]::after {
+  left: 0;
+  right: auto;
+  width: max-content;
+  max-width: 220px;
+  text-align: left;
+}
+
+/* A solid pill (not just shadowed text) so the hint stays legible no
+   matter what page content happens to scroll underneath it — plain
+   text here would sit on top of and overlap whatever's behind it. */
+.tour-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 403;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(15, 31, 30, 0.9);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 1100px) {
+  .module-main {
+    padding: 2rem 2.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Let body-text, the hero image, and the button row reorder as
+     siblings (paragraph, then image, then buttons) instead of the
+     desktop grouping where the image is a separate column. */
+  .hero-copy {
+    display: contents;
+  }
+
+  .hero-copy .body-text {
+    max-width: none;
+    order: 1;
+  }
+
+  .hero-media {
+    order: 2;
+    max-width: 40%;
+    margin: 0 auto;
+  }
+
+  .button-row {
+    order: 3;
+  }
+
+  .nav-drawer {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    bottom: 0;
+    height: auto;
+    z-index: 295;
+    width: min(var(--drawer-width), 85vw);
+    box-shadow: 12px 0 32px rgba(15, 31, 30, 0.18);
+  }
+
+  .nav-drawer.closed {
+    width: 0;
+    box-shadow: none;
+  }
+
+  .drawer-toggle {
+    left: calc(min(var(--drawer-width), 85vw) - 18px);
+  }
+
+  .ref-panel {
+    position: fixed;
+    top: var(--nav-height);
+    right: 0;
+    bottom: 0;
+    height: auto;
+    z-index: 295;
+    width: min(var(--ref-panel-width), 85vw);
+    box-shadow: -12px 0 32px rgba(15, 31, 30, 0.18);
+  }
+
+  .ref-panel.closed {
+    width: 0;
+    box-shadow: none;
+  }
+
+  .ref-toggle {
+    right: calc(min(var(--ref-panel-width), 85vw) - 18px);
+  }
+
+  .nav-backdrop,
+  .ref-backdrop {
+    display: block;
+    position: fixed;
+    top: var(--nav-height);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(15, 31, 30, 0.45);
+    z-index: 292;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition);
+  }
+
+  .nav-backdrop.visible,
+  .ref-backdrop.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (max-width: 800px) {
+  .module-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  :root {
+    --fs-h1: 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .module-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
