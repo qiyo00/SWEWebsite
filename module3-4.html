@@ -1,164 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Module 3-4 · SWE Learning Module</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<link rel="icon" type="image/svg+xml" href="mrp-June/images/websiteLogo.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 3-4 · SWE Learning Module</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="mrp-June/images/websiteLogo.png">
 </head>
+
 <body data-section="4">
 
-<header class="navbar">
-  <a href="index.html" class="nav-logo">
-    <img src="mrp-June/images/websiteLogo.png" alt="" class="nav-logo-icon">
-  </a>
-  <nav class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="index.html#modules" class="active">Modules</a>
-    <a href="equationsGlossary.html">Equations &amp; Glossary</a>
-    <a href="#">About</a>
-  </nav>
-</header>
+  <header class="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="mrp-June/images/websiteLogo.png" alt="" class="nav-logo-icon">
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#modules" class="active">Modules</a>
+      <a href="equationsGlossary.html">Equations &amp; Glossary</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
 
-<div class="module-layout">
+  <div class="module-layout">
 
-  <div class="nav-backdrop" id="navBackdrop"></div>
+    <div class="nav-backdrop" id="navBackdrop"></div>
 
-  <aside class="nav-drawer" id="navDrawer">
-    <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Toggle navigation" data-tooltip="Navigation">‹</button>
-    <nav class="drawer-nav">
-      <p class="drawer-title">Navigation</p>
-      <ul>
+    <aside class="nav-drawer" id="navDrawer">
+      <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Toggle navigation"
+        data-tooltip="Navigation">‹</button>
+      <nav class="drawer-nav">
+        <p class="drawer-title">Navigation</p>
+        <ul>
           <li><a href="module3-1.html" data-section="1"><span class="drawer-bullet"></span>3-1: Two Types of Mechanical
               Waves</a></li>
-          <li><a href="module3-2.html" data-section="2"><span class="drawer-bullet"></span>3-2: Shear Wave Generation in the
+          <li><a href="module3-2.html" data-section="2"><span class="drawer-bullet"></span>3-2: Shear Wave Generation in
+              the
               Myocardium</a></li>
-          <li><a href="module3-3.html" data-section="3"><span class="drawer-bullet"></span>3-3: Tracking Shear Waves with
+          <li><a href="module3-3.html" data-section="3"><span class="drawer-bullet"></span>3-3: Tracking Shear Waves
+              with
               Ultrafast Ultrasound</a></li>
-          <li><a href="module3-4.html" data-section="4"><span class="drawer-bullet"></span>3-4: Limitations and Real-World
+          <li><a href="module3-4.html" data-section="4"><span class="drawer-bullet"></span>3-4: Limitations and
+              Real-World
               Considerations</a></li>
         </ul>
-    </nav>
-  </aside>
+      </nav>
+    </aside>
 
-  <div class="ref-backdrop" id="refBackdrop"></div>
+    <div class="ref-backdrop" id="refBackdrop"></div>
 
-  <main class="module-main">
-    <section class="module-section">
-      <p class="eyebrow">Module 3-4</p>
-      <h2>Limitations and Real-World Considerations</h2>
-      <p class="body-text">The μ = ρc² relationship rests on several simplifying assumptions: the tissue is linearly elastic, isotropic, homogeneous, and geometrically unbounded. None of these holds exactly for the myocardium. The following considerations describe where each assumption breaks down and its implications for interpreting SWE measurements.</p>
+    <main class="module-main">
+      <section class="module-section">
+        <p class="eyebrow">Module 3-4</p>
+        <h2>Limitations and Real-World Considerations</h2>
+        <p class="body-text">The μ = ρc² relationship rests on several simplifying assumptions: the tissue is linearly
+          elastic, isotropic, homogeneous, and geometrically unbounded. None of these holds exactly for the myocardium.
+          The following considerations describe where each assumption breaks down and its implications for interpreting
+          SWE measurements.</p>
 
-      <h3>Viscoelasticity</h3>
-      <p class="body-text">Press your hand into memory foam quickly versus slowly: a fast push meets more resistance than a slow one. Myocardial tissue behaves similarly — its response depends on how fast it's deformed, which means different frequency components of a shear wave travel at different speeds.</p>
-      <p class="body-text">The μ = ρc² derivation assumes purely elastic behavior. In this model, energy is fully stored and returned with no loss. However, the myocardium is viscoelastic: its mechanical response includes both elastic and viscous components, which means it resists more when stretched faster and recovers slowly and dissipates energy over time. In a purely elastic material, all frequency components of a shear wave travel at the same speed. In a viscoelastic material, higher-frequency components travel faster than lower-frequency ones, which is known as <strong>shear wave dispersion</strong>.</p>
-      <p class="body-text">Because ARF-induced waves and natural valve-closure waves arise from different mechanical events, they carry different frequency content. In a dispersive medium such as the myocardium, this produces systematic differences in velocity estimates between the two methods, even in the same tissue at the same cardiac phase.</p>
+        <h3>Viscoelasticity</h3>
+        <p class="body-text">Press your hand into memory foam quickly versus slowly: a fast push meets more resistance
+          than a slow one. Myocardial tissue behaves similarly — its response depends on how fast it's deformed, which
+          means different frequency components of a shear wave travel at different speeds.</p>
+        <p class="body-text">The μ = ρc² derivation assumes purely elastic behavior. In this model, energy is fully
+          stored and returned with no loss. However, the myocardium is viscoelastic: its mechanical response includes
+          both elastic and viscous components, which means it resists more when stretched faster and recovers slowly and
+          dissipates energy over time. In a purely elastic material, all frequency components of a shear wave travel at
+          the same speed. In a viscoelastic material, higher-frequency components travel faster than lower-frequency
+          ones, which is known as <strong>shear wave dispersion</strong>.</p>
+        <p class="body-text">Because ARF-induced waves and natural valve-closure waves arise from different mechanical
+          events, they carry different frequency content. In a dispersive medium such as the myocardium, this produces
+          systematic differences in velocity estimates between the two methods, even in the same tissue at the same
+          cardiac phase.</p>
 
-      <div class="panel interactive-panel">
-        <div class="panel-header">
-          <span class="panel-label">Viscoelastic Dispersion</span>
-          <div class="panel-tags">
-            <span class="tag">Interactive</span>
-            <span class="tag">Physics</span>
+        <div class="panel interactive-panel">
+          <div class="panel-header">
+            <span class="panel-label">Viscoelastic Dispersion</span>
+            <div class="panel-tags">
+              <span class="tag">Interactive</span>
+              <span class="tag">Physics</span>
+            </div>
+          </div>
+          <div class="panel-body disp-interactive">
+            <div class="tofv-toolbar">
+              <div class="disp-toolbar-controls">
+                <button class="icon-btn disp-play-btn" id="dispPlayBtn" type="button"
+                  aria-label="Play wave propagation animation">▶</button>
+                <button class="icon-btn disp-reset-btn" id="dispResetBtn" type="button"
+                  aria-label="Reset wave propagation animation">↺</button>
+              </div>
+              <div class="disp-slider-group">
+                <div class="wave-slider-labels">
+                  <span>Viscoelasticity</span>
+                  <span id="dispLevelLabel" data-level="moderate">Moderate</span>
+                </div>
+                <input type="range" class="wave-slider" id="dispViscositySlider" min="0" max="3" step="1" value="2"
+                  aria-label="Viscoelasticity — none, mild, moderate, or strong">
+                <div class="wave-slider-endpoints">
+                  <span>None</span>
+                  <span>Mild</span>
+                  <span>Moderate</span>
+                  <span>Strong</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="disp-wave-row" data-wave="arf">
+              <p class="disp-wave-row-label">ARF-induced wave</p>
+              <canvas class="disp-wave-canvas" id="dispWaveCanvasArf" role="img"
+                aria-label="Animated ARF-induced shear waveform propagating across myocardial tissue, departing from the left edge. With viscoelasticity present it progressively distorts as it propagates; with no viscoelasticity it stays undistorted."></canvas>
+            </div>
+            <div class="disp-wave-row" data-wave="natural">
+              <p class="disp-wave-row-label">Natural (valve-closure) wave</p>
+              <canvas class="disp-wave-canvas" id="dispWaveCanvasNatural" role="img"
+                aria-label="Animated natural valve-closure shear waveform propagating across myocardial tissue, departing from the left edge at the same moment as the ARF-induced wave above. With viscoelasticity present it travels at a different average speed than the ARF wave and progressively distorts as it propagates; with no viscoelasticity it stays undistorted and in step with the ARF wave."></canvas>
+            </div>
+            <p class="wave-canvas-caption">animation: ARF &amp; natural valve-closure waves, shown on separate rows for
+              clarity — both depart at the same moment</p>
+
+            <div class="disp-chart-section">
+              <canvas class="disp-chart-canvas" id="dispChartCanvas" role="img"
+                aria-label="Velocity versus frequency chart. A dashed horizontal line marks the non-dispersive elastic reference speed. A solid curve shows the current viscoelastic dispersion relation, curving further above the reference line as viscoelasticity increases. Two points mark the representative frequency of the natural valve-closure wave and the ARF-induced wave, each connected by dashed guides to its frequency on the x-axis and its velocity on the y-axis."></canvas>
+              <p class="wave-canvas-caption">velocity vs. frequency — dispersion curve (solid) vs. non-dispersive
+                reference (dashed)</p>
+            </div>
+
+            <p class="wave-note">In a purely elastic tissue (viscoelasticity: none), the dispersion curve coincides
+              with the reference line and every frequency travels at the same speed, so the ARF and natural points
+              land at the same height and the two waveforms above stay locked together. As viscoelasticity increases,
+              higher-frequency components travel faster than lower-frequency ones, so the curve bows upward. Because
+              ARF-induced and natural valve-closure waves carry different frequency content, this same dispersion
+              produces a systematic velocity gap between the two methods, in the same tissue at the same cardiac
+              phase. Note: Frequencies, velocities, and timing are illustrative, not calibrated to a specific
+              measurement.</p>
           </div>
         </div>
-        <div class="panel-body">Placeholder — adjustable viscoelasticity slider (none / mild / moderate / strong) showing a velocity-vs-frequency dispersion curve alongside animated ARF and natural waveforms.</div>
-      </div>
 
-      <h3>Anisotropy</h3>
-      <p class="body-text">The shear modulus assumes <strong>isotropic</strong> behavior: identical mechanical properties in all directions. The LV myocardium is structurally anisotropic. Cardiomyocyte fibers are arranged in a transmural helix, with the fiber orientation rotating continuously from the epicardium to the endocardium relative to the circumferential direction. Shear wave velocity varies with the angle between the propagation direction and the local fiber orientation, generally propagating faster along the fiber axis than across it. A single velocity measurement along one propagation direction does not capture this directional dependence, and derived modulus values should be interpreted with the acquisition geometry in mind.</p>
+        <h3>Anisotropy</h3>
+        <p class="body-text">The conversion of shear wave velocity to a shear modulus assumes <strong>isotropic</strong> behavior: identical
+          mechanical properties in all directions. The LV myocardium is structurally anisotropic. Cardiomyocyte fibers
+          are arranged in a transmural helix, with the fiber orientation rotating continuously from the epicardium to
+          the endocardium relative to the circumferential direction. Shear wave velocity varies with the angle between
+          the propagation direction and the local fiber orientation, with waves generally propagating faster along the
+          fiber axis than across it. A single velocity measurement along one propagation direction does not capture this
+          directional dependence, and derived modulus values should be interpreted with the acquisition geometry in
+          mind.</p>
+        <div class="panel interactive-panel">
+          <div class="panel-header">
+            <span class="panel-label">Isotropic vs. Anisotropic Wave Propagation</span>
+            <div class="panel-tags">
+              <span class="tag">Interactive</span>
+              <span class="tag">Physics</span>
+            </div>
+          </div>
+          <div class="panel-body aniso-interactive">
+            <div class="aniso-scene">
+              <div class="aniso-panel" data-panel="isotropic">
+                <div class="aniso-panel-header">
+                  <span class="aniso-panel-title">Isotropic</span>
+                </div>
+                <canvas class="aniso-panel-canvas" id="isoCanvas" role="img"
+                  aria-label="Isotropic myocardial block with a point source at its center and concentric circular wavefronts radiating outward. A measurement line runs from the center to the outer wavefront along the current propagation angle; the circle is the same radius in every direction."></canvas>
+                <div class="aniso-readout-box aniso-readout-frozen">
+                  <span class="aniso-readout-label">Normalized wave speed</span>
+                  <span class="aniso-readout-value" id="isoSpeedValue">1.00</span>
+                  <span class="aniso-readout-badge">Fixed</span>
+                </div>
+              </div>
+              <div class="aniso-divider"></div>
+              <div class="aniso-panel" data-panel="anisotropic">
+                <div class="aniso-panel-header">
+                  <span class="aniso-panel-title">Anisotropic</span>
+                </div>
+                <canvas class="aniso-panel-canvas" id="anisoCanvas" role="img"
+                  aria-label="Anisotropic myocardial block with evenly spaced parallel diagonal lines representing fiber direction and a labeled fiber-axis arrow. A point source at the center radiates concentric elliptical wavefronts whose long axis runs parallel to the fibers. A measurement line runs from the center to the outer wavefront along the current propagation angle; the wavefront extends further in that direction the closer it is to the fiber axis."></canvas>
+                <div class="aniso-readout-box aniso-readout-live">
+                  <span class="aniso-readout-label">Normalized wave speed</span>
+                  <span class="aniso-readout-value" id="anisoSpeedValue">1.18</span>
+                  <span class="aniso-readout-badge">Live</span>
+                </div>
+              </div>
+            </div>
 
-      <div class="figure-placeholder">
-        <span class="figure-label">Cardiomyocyte Fiber Orientation</span>
-        <p class="figure-caption">Placeholder — illustration of the transmural helical fiber arrangement from epicardium to endocardium (images to be sourced).</p>
-      </div>
+            <div class="aniso-controls">
+              <div class="aniso-slider-group">
+                <div class="wave-slider-labels">
+                  <span>Wave propagation angle</span>
+                  <span id="anisoAngleLabel">45°</span>
+                </div>
+                <input type="range" class="wave-slider" id="anisoAngleSlider" min="0" max="180" step="1" value="45"
+                  aria-label="Wave propagation angle, from 0 to 180 degrees, drives the measurement line and speed readout in both panels">
+                <div class="wave-slider-endpoints">
+                  <span>0°</span>
+                  <span>180°</span>
+                </div>
+              </div>
 
-      <h3>Guided waves and wall geometry</h3>
-      <p class="body-text">We also assume that wave propagation is in an unbounded medium. The myocardial wall is a finite-thickness structure bounded by the endocardium and epicardium. When shear wavelength is comparable to wall thickness, the bounding surfaces begin to constrain wave propagation, and velocity becomes dependent on wall geometry as well as tissue mechanical properties. Velocity is not uniquely determined by shear modulus alone, and applying μ = ρc² without accounting for wall thickness introduces error into stiffness estimates. This effect is most pronounced in pediatric imaging, where LV wall thickness may be only a few millimeters. Wall thickness should therefore be documented alongside velocity measurements as a relevant co-variable in pediatric myocardial SWE.</p>
+              <div class="aniso-depth-row">
+                <div class="aniso-slider-group">
+                  <div class="wave-slider-labels">
+                    <span>Transmural depth</span>
+                    <span id="anisoDepthLabel">Mid-wall</span>
+                  </div>
+                  <input type="range" class="wave-slider" id="anisoDepthSlider" min="0" max="100" step="1"
+                    value="50"
+                    aria-label="Transmural depth from endocardium to epicardium; continuously rotates the modeled fiber direction in the anisotropic panel only">
+                  <div class="wave-slider-endpoints">
+                    <span>Endocardium</span>
+                    <span>Epicardium</span>
+                  </div>
+                </div>
+                <div class="aniso-thumb-wrap">
+                  <canvas class="aniso-thumb-canvas" id="anisoThumbCanvas" role="img"
+                    aria-label="LV short-axis cross-section thumbnail with a marker showing the current transmural position between endocardium and epicardium"></canvas>
+                  <span class="aniso-thumb-caption">Wall position</span>
+                </div>
+              </div>
+            </div>
 
-      <div class="panel interactive-panel">
-        <div class="panel-header">
-          <span class="panel-label">Guided Wave / Wall Thickness</span>
-          <div class="panel-tags">
-            <span class="tag">Interactive</span>
-            <span class="tag">Physics</span>
+            <p class="wave-note">The isotropic panel's speed stays fixed at <strong>1.00</strong> regardless of
+              either slider — direction and depth have no effect on it. The anisotropic panel's speed changes with
+              both: it is highest when the propagation angle aligns with the local fiber direction and lowest
+              across it, and that fiber direction itself rotates as the transmural depth slider moves. Note: this
+              figure is schematic. The anisotropy ratio and the endocardial/epicardial fiber angles are illustrative
+              placeholders, not values drawn from a specific measurement.</p>
           </div>
         </div>
-        <div class="panel-body">Placeholder — adjustable wall-thickness slider showing how apparent shear wave velocity changes as wavelength approaches wall thickness, with a side-by-side comparison of a thick vs. thin ventricular wall.</div>
-      </div>
 
-      <h3>Attenuation and reflections</h3>
-      <p class="body-text">Shear wave amplitude decreases with propagation distance due to geometric spreading, viscous absorption, and scattering. At greater distances from the push site, displacement amplitude may fall below reliable detection thresholds, limiting the spatial extent over which velocity estimates can be obtained. Reflections from tissue boundaries — including the endocardium, pericardium, and structural discontinuities — can produce secondary wave fronts that interfere with the primary propagating wave and complicate velocity estimation.</p>
+        <h3>Guided waves and wall geometry</h3>
+        <p class="body-text">We also assume that wave propagation is in an unbounded medium. The myocardial wall is a
+          <strong>finite-thickness</strong> structure bounded by the endocardium and epicardium. When shear wavelength
+          is comparable to
+          wall thickness, the bounding surfaces begin to constrain wave propagation, and velocity becomes dependent on
+          wall geometry as well as tissue mechanical properties. Velocity is not uniquely determined by shear modulus
+          alone, and applying μ = ρc² without accounting for wall thickness introduces error into stiffness estimates.
+          This effect is most pronounced in pediatric imaging, where LV wall thickness may be only a few millimeters.
+          Wall thickness should therefore be documented alongside velocity measurements as a relevant co-variable in
+          pediatric myocardial SWE.
+        </p>
 
-      <div class="callout">
-        <p class="callout-label">Summary</p>
-        <p class="callout-text">The shear modulus model assumes elastic, isotropic, and unbounded tissue. In the myocardium, viscoelasticity makes wave velocity frequency dependent. Anisotropic fiber architecture means wave velocity varies with propagation direction. In thin walls, the bounding surfaces constrain wave propagation, making wall thickness a relevant co-variable — an effect most pronounced in pediatric imaging. Attenuation and boundary reflections set practical limits on measurement range and reliability.</p>
-      </div>
+        <div class="panel interactive-panel">
+          <div class="panel-header">
+            <span class="panel-label">Guided Wave / Wall Thickness</span>
+            <div class="panel-tags">
+              <span class="tag">Interactive</span>
+              <span class="tag">Physics</span>
+            </div>
+          </div>
+          <div class="panel-body gw-interactive">
+            <div class="tofv-toolbar">
+              <div class="disp-slider-group">
+                <div class="wave-slider-labels">
+                  <span>Wall thickness</span>
+                  <span id="gwThicknessLabel">4.0 mm</span>
+                </div>
+                <input type="range" class="wave-slider" id="gwThicknessSlider" min="2" max="15" step="0.5" value="4"
+                  aria-label="Myocardial wall thickness, in millimeters">
+                <div class="wave-slider-endpoints">
+                  <span>2 mm</span>
+                  <span>15 mm</span>
+                </div>
+              </div>
+            </div>
 
-      <div class="section-nav">
-        <a href="module3-3.html" class="btn btn-ghost">Previous</a>
-        <button class="btn btn-ghost" data-action="back-to-top">Back to Top</button>
-        <a href="index.html#modules" class="btn btn-next">Finish Module 3</a>
-      </div>
-    </section>
-  </main>
+            <div class="gw-wall-row">
+              <p class="gw-wall-label">Wall</p>
+              <canvas class="gw-wall-canvas" id="gwWallCanvas" role="img"
+                aria-label="Cross-section of the myocardial wall showing a guided shear wave of fixed wavelength traveling between the endocardial and epicardial boundaries. As wall thickness decreases, the boundaries close in on the wave and visibly constrain it; as wall thickness increases, the boundaries move apart and the wave looks increasingly free."></canvas>
+            </div>
+            <p class="wave-canvas-caption">wall cross-section — wavelength fixed at 5 mm; wall thickness follows the
+              slider above</p>
 
-  <aside class="ref-panel" id="refPanel">
-    <button class="icon-btn ref-toggle" id="refToggle" aria-label="Toggle reference panel" data-tooltip="Equations, Glossary &amp; Sources">‹</button>
-    <div class="ref-tabs">
-      <button class="ref-tab active" data-tab="equations">Equations</button>
-      <button class="ref-tab" data-tab="glossary">Glossary</button>
-      <button class="ref-tab" data-tab="sources">Sources</button>
-    </div>
-    <div class="ref-panel-content" data-panel="equations">
-      <div class="eq-item">
-        <p class="eq-name">Shear modulus</p>
-        <p class="eq-formula">μ = ρc²</p>
-        <p class="eq-note">Assumes elastic, isotropic, unbounded tissue — the assumptions examined on this page.</p>
-      </div>
-      <div class="eq-item">
-        <p class="eq-name">Young's modulus (approximation)</p>
-        <p class="eq-formula">E ≈ 3μ</p>
-        <p class="eq-note">Valid under the near-incompressibility assumption (Section 1).</p>
-      </div>
-    </div>
-    <div class="ref-panel-content" data-panel="glossary" hidden>
-      <div class="glossary-item">
-        <p class="glossary-term">Viscoelasticity</p>
-        <p class="glossary-def">A material response combining elastic and viscous components, so mechanical resistance depends on the rate of deformation.</p>
-      </div>
-      <div class="glossary-item">
-        <p class="glossary-term">Shear wave dispersion</p>
-        <p class="glossary-def">The phenomenon in which higher-frequency shear wave components travel faster than lower-frequency ones in a viscoelastic material.</p>
-      </div>
-      <div class="glossary-item">
-        <p class="glossary-term">Anisotropy</p>
-        <p class="glossary-def">Directional dependence of mechanical properties; in the myocardium, shear wave velocity varies with the angle to local fiber orientation.</p>
-      </div>
-      <div class="glossary-item">
-        <p class="glossary-term">Guided wave</p>
-        <p class="glossary-def">A wave whose propagation is shaped by bounding surfaces (here, the endocardium and epicardium) when wavelength approaches wall thickness.</p>
-      </div>
-      <div class="glossary-item">
-        <p class="glossary-term">Attenuation</p>
-        <p class="glossary-def">The decrease in shear wave amplitude with propagation distance, due to geometric spreading, viscous absorption, and scattering.</p>
-      </div>
-    </div>
-    <div class="ref-panel-content" data-panel="sources" hidden>
-      <p class="sources-note">Source citations for this section will be added here.</p>
-    </div>
-  </aside>
+            <div class="disp-chart-section">
+              <canvas class="gw-chart-canvas" id="gwChartCanvas" role="img"
+                aria-label="Apparent velocity versus wall thickness to wavelength ratio. A dashed horizontal line marks the true bulk shear wave velocity. A solid curve rises from a low apparent velocity at small ratios toward that reference as the ratio increases. A point marks the current wall thickness's position on the curve, connected by dashed guides to its ratio on the x-axis and its apparent velocity on the y-axis."></canvas>
+              <p class="wave-canvas-caption">apparent velocity vs. wall thickness / wavelength — dashed line marks
+                the true bulk shear velocity</p>
+            </div>
 
-</div>
+            <p class="wave-note">At this wall thickness, the apparent velocity is
+              <strong><span id="gwDeviationValue">32.9%</span> below</strong> the true bulk shear velocity —
+              applying μ = ρc² directly here would underestimate the tissue's true stiffness. As wall thickness grows
+              relative to the wavelength, the boundaries matter less and the apparent velocity converges toward the
+              true value. This is why wall thickness should be documented alongside velocity in pediatric myocardial
+              SWE, where LV wall thickness can approach the shear wavelength itself. Note: The curve's shape is
+              illustrative — not a full Rayleigh–Lamb solution — and is not calibrated to a specific measurement.
+            </p>
+          </div>
+        </div>
 
-<footer class="site-footer">
-  <p>Visualizing Ultrafast Ultrasound Physics for Pediatric Myocardial Stiffness Assessment © 2026 Qingyue Guo · University of Toronto</p>
-</footer>
+        <h3>Attenuation and reflections</h3>
+        <p class="body-text">Shear wave amplitude decreases with propagation distance due to geometric spreading,
+          viscous absorption, and scattering. At greater distances from the push site, displacement amplitude may fall
+          below reliable detection thresholds, limiting the spatial extent over which velocity estimates can be
+          obtained. Reflections from tissue boundaries, including the endocardium, pericardium, and structural
+          discontinuities, can produce secondary wave fronts that interfere with the primary propagating wave and
+          complicate velocity estimation.</p>
 
-<script src="script.js" defer></script>
+        <div class="callout">
+          <p class="callout-label">Summary</p>
+          <p class="callout-text">The shear modulus model assumes elastic, isotropic, and unbounded tissue.</p>
+          <ul class="callout-list">
+            <li>In the myocardium, viscoelasticity makes wave velocity frequency dependent.</li>
+            <li>Anisotropic fiber architecture means wave velocity varies with propagation direction.</li>
+            <li>In thin walls, the bounding surfaces constrain wave propagation, making wall thickness a relevant
+              co-variable — an effect most pronounced in pediatric imaging.</li>
+            <li>Attenuation and boundary reflections set practical limits on measurement range and reliability.</li>
+          </ul>
+        </div>
+
+        <div class="section-nav">
+          <a href="module3-3.html" class="btn btn-ghost">Previous</a>
+          <button class="btn btn-ghost" data-action="back-to-top">Back to Top</button>
+          <a href="index.html#modules" class="btn btn-next">Finish Module 3</a>
+        </div>
+      </section>
+    </main>
+
+    <aside class="ref-panel" id="refPanel">
+      <button class="icon-btn ref-toggle" id="refToggle" aria-label="Toggle reference panel"
+        data-tooltip="Equations, Glossary &amp; Sources">‹</button>
+      <div class="ref-tabs">
+        <button class="ref-tab active" data-tab="equations">Equations</button>
+        <button class="ref-tab" data-tab="glossary">Glossary</button>
+        <button class="ref-tab" data-tab="sources">Sources</button>
+      </div>
+      <div class="ref-panel-content" data-panel="equations">
+        <div class="eq-item">
+          <p class="eq-name">Shear modulus</p>
+          <p class="eq-formula">μ = ρc²</p>
+          <p class="eq-note">Assumes elastic, isotropic, unbounded tissue — the assumptions examined on this page.</p>
+        </div>
+        <div class="eq-item">
+          <p class="eq-name">Young's modulus (approximation)</p>
+          <p class="eq-formula">E ≈ 3μ</p>
+          <p class="eq-note">Valid under the near-incompressibility assumption (Section 1).</p>
+        </div>
+        <div class="eq-item">
+          <p class="eq-name">Voigt model (complex shear modulus)</p>
+          <p class="eq-formula">μ*(ω) = μ₁ + jωμ₂</p>
+          <p class="eq-note">μ₁ = elastic (storage) modulus, μ₂ = viscosity, ω = 2πf.</p>
+        </div>
+        <div class="eq-item">
+          <p class="eq-name">Dispersed phase velocity</p>
+          <p class="eq-formula">c(f) = √( 2(μ₁²+(ωμ₂)²) / (ρ(μ₁+√(μ₁²+(ωμ₂)²))) )</p>
+          <p class="eq-note">Reduces to c = √(μ₁/ρ), frequency-independent, when μ₂ = 0.</p>
+        </div>
+      </div>
+      <div class="ref-panel-content" data-panel="glossary" hidden>
+        <div class="glossary-item">
+          <p class="glossary-term">Viscoelasticity</p>
+          <p class="glossary-def">A material response combining elastic and viscous components, so mechanical resistance
+            depends on the rate of deformation.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Shear wave dispersion</p>
+          <p class="glossary-def">The phenomenon in which higher-frequency shear wave components travel faster than
+            lower-frequency ones in a viscoelastic material.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Anisotropy</p>
+          <p class="glossary-def">Directional dependence of mechanical properties; in the myocardium, shear wave
+            velocity varies with the angle to local fiber orientation.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Guided wave</p>
+          <p class="glossary-def">A wave whose propagation is shaped by bounding surfaces (here, the endocardium and
+            epicardium) when wavelength approaches wall thickness.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Attenuation</p>
+          <p class="glossary-def">The decrease in shear wave amplitude with propagation distance, due to geometric
+            spreading, viscous absorption, and scattering.</p>
+        </div>
+      </div>
+      <div class="ref-panel-content" data-panel="sources" hidden>
+        <p class="sources-note">Source citations for this section will be added here.</p>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="site-footer">
+    <p>Visualizing Ultrafast Ultrasound Physics for Pediatric Myocardial Stiffness Assessment © 2026 Qingyue Guo ·
+      University of Toronto</p>
+  </footer>
+
+  <script src="script.js" defer></script>
 </body>
+
 </html>

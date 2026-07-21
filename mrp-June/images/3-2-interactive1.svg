@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2560 1600">
+  <defs>
+    <filter id="luminosity-noclip" x="555.314" y="506.511" width="1442.011" height="1080.83" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <mask id="mask" x="555.314" y="506.511" width="1442.011" height="1080.83" maskUnits="userSpaceOnUse">
+      <g filter="url(#luminosity-noclip)">
+        <path d="M1371.575,1585.84c-53.426-192.223-78.475-313.759-71.128-439.245,12.83-219.128,132.596-461.713,323.702-640.085h-696.149c191.106,178.372,310.872,420.957,323.702,640.085,7.347,125.486-17.702,247.021-71.128,439.245h191.001Z"/>
+      </g>
+    </mask>
+    <filter id="luminosity-noclip-2" x="1138.819" y="1076.286" width="275" height="59.075" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <mask id="mask-1" x="1138.819" y="1076.286" width="275" height="59.075" maskUnits="userSpaceOnUse">
+      <g filter="url(#luminosity-noclip-2)">
+        <polygon points="1307.213 1091.998 1244.987 1092.779 1242.545 1076.286 1309.447 1076.771 1307.213 1091.998" fill="#494949"/>
+      </g>
+    </mask>
+    <filter id="luminosity-noclip-3" x="924.097" y="-15.359" width="722.18" height="109.287" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-color="#fff" result="bg"/>
+      <feBlend in="SourceGraphic" in2="bg"/>
+    </filter>
+    <linearGradient id="linear-gradient" x1="1285.187" y1="27.269" x2="1285.187" y2="85.6" gradientUnits="userSpaceOnUse">
+      <stop offset=".195" stop-color="#fff"/>
+      <stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <mask id="mask-2" x="924.097" y="-15.359" width="722.18" height="109.287" maskUnits="userSpaceOnUse">
+      <g filter="url(#luminosity-noclip-3)">
+        <rect x="924.097" y="-15.359" width="722.18" height="109.287" fill="url(#linear-gradient)"/>
+      </g>
+    </mask>
+  </defs>
+  <g id="xyz_axis" data-name="xyz axis">
+    <g>
+      <line x1="382.219" y1="282.078" x2="543.526" y2="120.77" fill="none" stroke="#a3344a" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      <polygon points="405.006 294.549 356.847 307.45 369.748 259.29 405.006 294.549" fill="#a3344a"/>
+    </g>
+    <g>
+      <line x1="462.872" y1="360.795" x2="462.872" y2="42.819" fill="none" stroke="#1d6fa4" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      <polygon points="487.804 353.5 462.872 396.676 437.941 353.5 487.804 353.5" fill="#1d6fa4"/>
+    </g>
+    <text transform="translate(332.101 330.914)" fill="#a3344a" font-family="CambriaMath, &apos;Cambria Math&apos;" font-size="36"><tspan x="0" y="0">y</tspan></text>
+    <text transform="translate(454.525 423.696)" fill="#1d6fa4" font-family="CambriaMath, &apos;Cambria Math&apos;" font-size="36"><tspan x="0" y="0">z</tspan></text>
+    <g>
+      <line x1="621.861" y1="201.424" x2="303.884" y2="201.424" fill="none" stroke="#0c7a70" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+      <polygon points="614.566 176.492 657.742 201.424 614.566 226.356 614.566 176.492" fill="#0c7a70"/>
+    </g>
+    <text transform="translate(666.061 208.865)" fill="#0c7a70" font-family="CambriaMath, &apos;Cambria Math&apos;" font-size="36"><tspan x="0" y="0">x</tspan></text>
+    <circle cx="462.872" cy="202.371" r="12.255" fill="#3f5150"/>
+  </g>
+  <g id="medium">
+    <g mask="url(#mask)">
+      <g>
+        <polygon points="1995.824 684.883 1927.654 616.713 624.984 616.713 556.814 684.883 1995.824 684.883" fill="#f0f5f5" stroke="#3f5150" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <rect x="556.814" y="684.883" width="1439.011" height="900.957" fill="#f0f5f5" stroke="#3f5150" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+    </g>
+  </g>
+  <g id="beam">
+    <path d="M1371.575,1585.84c-53.426-192.223-78.475-313.759-71.128-439.245,12.83-219.128,132.596-461.713,323.702-640.085h-696.149c191.106,178.372,310.872,420.957,323.702,640.085,7.347,125.486-17.702,247.021-71.128,439.245h191.001Z" fill="rgba(214, 232, 245, .6)"/>
+    <path d="M1371.575,1585.84c-53.426-192.223-78.475-313.759-71.128-439.245,12.83-219.128,132.596-461.713,323.702-640.085h-696.149c191.106,178.372,310.872,420.957,323.702,640.085,7.347,125.486-17.702,247.021-71.128,439.245h191.001Z" fill="none" stroke="#1d6fa4" stroke-miterlimit="10" stroke-width="5"/>
+  </g>
+  <g id="focalZone">
+    <g mask="url(#mask-1)">
+      <path d="M1141.319,1135.362c0-28.713,60.442-51.989,135-51.989s135,23.276,135,51.989" fill="none" stroke="#d3d3d3" stroke-miterlimit="10" stroke-width="5"/>
+    </g>
+    <path d="M1411.319,1135.362c0,28.713-60.442,51.989-135,51.989s-135-23.276-135-51.989" fill="none" stroke="#9e9e9e" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+  </g>
+  <g id="shearWave">
+    <g>
+      <path d="M1276.319,1135.362h-193.111c-44.521,0-44.521,60-89.043,60s-44.521-60-89.043-60h-330.368" fill="none" stroke="#0c7a70" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      <polygon points="578.402 1122.896 556.814 1135.362 578.402 1147.828 578.402 1122.896" fill="#0c7a70"/>
+    </g>
+    <g>
+      <path d="M1276.319,1135.362h193.111c44.521,0,44.521,60,89.043,60s44.521-60,89.043-60h330.368" fill="none" stroke="#0c7a70" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+      <polygon points="1974.236 1147.828 1995.824 1135.362 1974.236 1122.896 1974.236 1147.828" fill="#0c7a70"/>
+    </g>
+  </g>
+  <g id="dot">
+    <circle cx="1276.319" cy="1135.362" r="13.979" fill="#0c7a70"/>
+  </g>
+  <g id="probe">
+    <g>
+      <path d="M933.943,432.285h684.751c4.607,0,8.347,3.74,8.347,8.347v59.98c0,4.607-3.74,8.347-8.347,8.347h-684.751c-4.606,0-8.346-3.74-8.346-8.346v-59.981c0-4.606,3.74-8.346,8.346-8.346Z" fill="#f0f5f5"/>
+      <path d="M1618.695,433.785c3.775,0,6.846,3.071,6.846,6.847v59.981c0,3.775-3.071,6.847-6.846,6.847h-684.751c-3.775,0-6.847-3.071-6.847-6.847v-59.981c0-3.775,3.071-6.847,6.847-6.847h684.751M1618.695,430.785h-684.751c-5.438,0-9.847,4.408-9.847,9.847v59.981c0,5.438,4.408,9.847,9.847,9.847h684.751c5.438,0,9.846-4.409,9.846-9.847v-59.981c0-5.438-4.408-9.847-9.846-9.847h0Z" fill="#3f5150"/>
+    </g>
+    <g>
+      <path d="M952.003,432.285v-206.19c0-25.989,9.762-50.936,26.783-68.443,17.561-18.062,27.632-43.771,27.632-70.534V12.856h539.8v74.262c0,26.763,10.071,52.471,27.633,70.534,17.021,17.508,26.783,42.454,26.783,68.443v206.19h-648.631Z" fill="#f0f5f5"/>
+      <path d="M1544.719,14.356v72.761c0,27.15,10.226,53.24,28.057,71.58,16.751,17.23,26.359,41.795,26.359,67.397v204.69h-645.631v-204.69c0-25.602,9.607-50.167,26.359-67.397,17.831-18.34,28.057-44.43,28.057-71.58V14.356h536.799M1547.719,11.356h-542.799v75.761c0,26.44-9.875,51.66-27.208,69.489h0c-17.333,17.828-27.208,43.048-27.208,69.489v207.69h651.631v-207.69c0-26.44-9.875-51.66-27.208-69.489h0c-17.333-17.828-27.208-43.048-27.208-69.489V11.356h0Z" fill="#3f5150"/>
+    </g>
+    <g>
+      <rect x="950.503" y="456.26" width="111.447" height="28.723" rx="9.846" ry="9.846" fill="#3f5150"/>
+      <rect x="1085.586" y="456.26" width="111.447" height="28.723" rx="9.846" ry="9.846" fill="#3f5150"/>
+      <rect x="1220.669" y="456.26" width="111.447" height="28.723" rx="9.846" ry="9.846" fill="#3f5150"/>
+      <rect x="1355.751" y="456.26" width="111.447" height="28.723" rx="9.846" ry="9.846" fill="#3f5150"/>
+      <rect x="1490.834" y="456.26" width="111.447" height="28.723" rx="9.846" ry="9.846" fill="#3f5150"/>
+    </g>
+    <g mask="url(#mask-2)">
+      <rect x="944.591" width="663.603" height="93.17" fill="#fff"/>
+    </g>
+  </g>
+</svg>
