@@ -2494,6 +2494,174 @@ h2 {
 }
 
 /* =========================================================
+   Equations & Glossary page (equationsGlossary.html)
+   Same visual language as the reference-panel styles above
+   (.eq-name/.eq-formula/.eq-note, .glossary-term/.glossary-def, .tag),
+   laid out as a normal stacked list (divider between entries) rather
+   than a card grid, plus a live search box that filters .eqg-item
+   entries (see initEquationsGlossarySearch in script.js).
+   Without a right-hand reference panel to narrow it, .module-main runs
+   much wider here than on the module pages, which let every line of
+   body copy (and the search status line) stretch edge-to-edge on wide
+   screens. #module-3 caps the whole section back to the site's normal
+   reading width so long lines wrap instead.
+   ========================================================= */
+#module-3 {
+  max-width: var(--content-max-width);
+}
+
+.eqg-search-wrap {
+  margin: 1.5rem 0;
+}
+
+.eqg-search-box {
+  position: relative;
+  max-width: 420px;
+}
+
+.eqg-search-icon {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--text-2);
+  pointer-events: none;
+  transition: color var(--transition);
+}
+
+.eqg-search-box:focus-within .eqg-search-icon {
+  color: var(--accent);
+}
+
+.eqg-search-input {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 2.25rem 0.65rem 2.35rem;
+  font-family: var(--font-body);
+  font-size: var(--fs-body-sm);
+  color: var(--text-1);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+/* Native type="search" clear icon is redundant with our own button below. */
+.eqg-search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.eqg-search-input::placeholder {
+  color: var(--text-2);
+}
+
+.eqg-search-input:focus {
+  outline: none;
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(12, 122, 112, 0.15);
+}
+
+.eqg-search-clear {
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text-2);
+  transition: background var(--transition), color var(--transition);
+}
+
+.eqg-search-clear:hover {
+  background: var(--card-hover);
+  color: var(--text-1);
+}
+
+.eqg-search-status {
+  margin-top: 0.65rem;
+  font-size: var(--fs-caption);
+  color: var(--text-2);
+}
+
+.eqg-search-status strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+.eqg-item mark {
+  background: var(--accent-bg);
+  color: var(--accent-dim);
+  font-weight: 600;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.eqg-group {
+  margin-bottom: 1rem;
+}
+
+.eqg-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.eqg-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.eqg-list .eqg-item:last-child {
+  border-bottom: none;
+}
+
+.eqg-item[hidden] {
+  display: none;
+}
+
+.eqg-item-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.eqg-item .eq-name,
+.eqg-item .glossary-term {
+  flex: 1;
+  min-width: 0;
+}
+
+.eqg-jump-link {
+  align-self: flex-start;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  color: var(--accent);
+  transition: color var(--transition);
+}
+
+.eqg-jump-link:hover {
+  color: var(--accent-dim);
+}
+
+.eqg-no-results {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+  padding: 1rem 0;
+}
+
+/* =========================================================
    Drawer/panel backdrops (mobile overlay only)
    ========================================================= */
 .nav-backdrop,

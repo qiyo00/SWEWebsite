@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SWE Learning Module</title>
+    <title>Equations &amp; Glossary · SWE Learning Module</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -22,10 +22,472 @@
         <nav class="nav-links">
             <a href="index.html">Home</a>
             <a href="index.html#modules">Modules</a>
-            <a href="#" class="active">Equations &amp; Glossary</a>
+            <a href="equationsGlossary.html" class="active">Equations &amp; Glossary</a>
             <a href="#">About</a>
         </nav>
     </header>
+
+    <div class="module-layout">
+
+        <div class="nav-backdrop" id="navBackdrop"></div>
+
+        <aside class="nav-drawer" id="navDrawer">
+            <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Toggle navigation"
+                data-tooltip="Navigation">‹</button>
+            <nav class="drawer-nav">
+                <p class="drawer-title">Navigation</p>
+                <ul>
+                    <li><a href="module3-1.html" data-section="1"><span class="drawer-bullet"></span>3-1: Two Types of
+                            Mechanical Waves</a></li>
+                    <li><a href="module3-2.html" data-section="2"><span class="drawer-bullet"></span>3-2: Shear Wave
+                            Generation in the Myocardium</a></li>
+                    <li><a href="module3-3.html" data-section="3"><span class="drawer-bullet"></span>3-3: Tracking
+                            Shear Waves with Ultrafast Ultrasound</a></li>
+                    <li><a href="module3-4.html" data-section="4"><span class="drawer-bullet"></span>3-4: Limitations
+                            and Real-World Considerations</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="module-main">
+            <div class="module-intro">
+                <p class="eyebrow">Reference</p>
+                <h1>Equations &amp; <span style="color: var(--accent);">Glossary</span></h1>
+                <p class="body-text">A reference of equations and terms introduced across the modules. Each entry is tagged with
+                    the section where it first appears.</p>
+            </div>
+
+            <div class="panel sections-panel">
+                <p class="drawer-title" style="padding: 1rem 1.125rem 0;">Modules</p>
+                <ul class="section-list">
+                    <li>
+                        <a class="section-list-link" href="#module-3">
+                            <span class="bullet"></span>
+                            Module 3 — Shear Wave Elastography
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <hr class="divider">
+
+            <section class="module-section" id="module-3">
+                <p class="eyebrow">Module 3</p>
+                <h2>Shear Wave Elastography</h2>
+
+                <div class="eqg-search-wrap">
+                    <div class="eqg-search-box">
+                        <svg class="eqg-search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true">
+                            <circle cx="8.75" cy="8.75" r="6.25" stroke="currentColor" stroke-width="1.6" />
+                            <line x1="13.4" y1="13.4" x2="17.5" y2="17.5" stroke="currentColor" stroke-width="1.6"
+                                stroke-linecap="round" />
+                        </svg>
+                        <input type="search" class="eqg-search-input" id="eqgSearchInput"
+                            placeholder="Search equations &amp; glossary…"
+                            aria-label="Search equations and glossary">
+                        <button type="button" class="eqg-search-clear" id="eqgSearchClear" aria-label="Clear search"
+                            hidden>×</button>
+                    </div>
+                    <p class="eqg-search-status" id="eqgSearchStatus" hidden></p>
+                </div>
+
+                <div class="button-row">
+                    <a class="btn btn-ghost" href="#module-3-equations">Equations</a>
+                    <a class="btn btn-ghost" href="#module-3-glossary">Glossary</a>
+                </div>
+
+                <div class="eqg-group" id="group-equations">
+                <h3 id="module-3-equations">Equations</h3>
+                <div class="eqg-list">
+                    <div class="eqg-item" id="eq-compressional-wave-velocity">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Compressional wave velocity (soft tissue)</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="eq-formula">≈ 1,540 m/s</p>
+                        <p class="eq-note">Approximately constant; insensitive to myocardial stiffness.</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="eq-shear-wave-velocity">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Shear wave velocity (soft tissue)</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="eq-formula">≈ 1–10 m/s</p>
+                        <p class="eq-note">Varies with the shear modulus (μ) — the basis of SWE.</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="eq-shear-modulus">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Shear modulus</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="eq-formula">μ = ρc²</p>
+                        <p class="eq-note">ρ ≈ 1,000 kg/m³ (soft tissue density); c = shear wave velocity.</p>
+                        <p class="caption">Section: 3-3 (introduced) · also 3-4 (assumptions examined)</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="eq-youngs-modulus">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Young's modulus (approximation)</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="eq-formula">E ≈ 3μ</p>
+                        <p class="eq-note">Valid under the near-incompressibility assumption. Both μ and E are
+                            reported in kPa.</p>
+                        <p class="caption">Section: 3-3 (introduced) · also 3-4 (assumptions examined)</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="eq-conventional-frame-time">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Conventional frame time (line-by-line imaging)</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="eq-formula">frame time ≈ (2d / c₀) × N</p>
+                        <p class="eq-note">d = imaging depth, c₀ = speed of sound in tissue (~1,540 m/s), N = number
+                            of scan lines.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="eq-ultrafast-frame-interval">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Ultrafast frame interval</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="eq-formula">frame interval = 1 / FR</p>
+                        <p class="eq-note">FR = frame rate (Hz).</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="eq-voigt-model">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Voigt model (complex shear modulus)</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="eq-formula">μ*(ω) = μ₁ + jωμ₂</p>
+                        <p class="eq-note">μ₁ = elastic (storage) modulus, μ₂ = viscosity, ω = 2πf.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="eq-dispersed-phase-velocity">
+                        <div class="eqg-item-head">
+                            <p class="eq-name">Dispersed phase velocity</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="eq-formula">c(f) = √( 2(μ₁²+(ωμ₂)²) / (ρ(μ₁+√(μ₁²+(ωμ₂)²))) )</p>
+                        <p class="eq-note">Reduces to c = √(μ₁/ρ), frequency-independent, when μ₂ = 0.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+                </div>
+                </div>
+
+                <div class="eqg-group" id="group-glossary">
+                <h3 id="module-3-glossary">Glossary</h3>
+                <div class="eqg-list">
+                    <div class="eqg-item" id="glossary-acoustic-radiation-force">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Acoustic radiation force (ARF)</p>
+                            <span class="tag">3-2</span>
+                        </div>
+                        <p class="glossary-def">The mechanical force created when part of an ultrasound wave's energy
+                            transfers into momentum inside tissue, acting in the direction of wave propagation. A
+                            focused push pulse concentrates ARF at the beam focal point to create the localized
+                            displacement that launches a shear wave.</p>
+                        <p class="caption">Section: 3-2 (introduced) · also referenced in 3-4 ("ARF-induced waves")
+                        </p>
+                        <a class="eqg-jump-link" href="module3-2.html">Module 3-2 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-anisotropy">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Anisotropy</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="glossary-def">Directional dependence of mechanical properties; in the myocardium,
+                            shear wave velocity varies with the angle to local fiber orientation.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-attenuation">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Attenuation</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="glossary-def">The decrease in shear wave amplitude with propagation distance, due to
+                            geometric spreading, viscous absorption, and scattering.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-b-mode-imaging">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">B-mode imaging</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="glossary-def">Conventional grayscale ultrasound imaging, reconstructed from
+                            compressional (sound) wave echoes. Relies on compressional wave velocity staying constant
+                            regardless of tissue stiffness.</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-coherent-compounding">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Coherent compounding</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">Combining images from multiple angled plane wave transmissions to
+                            recover image quality while keeping frame rates well above conventional imaging.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-compressional-wave">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Compressional wave</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="glossary-def">A mechanical wave in which particles oscillate parallel to the
+                            direction of propagation, producing alternating compression and rarefaction.</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-density">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Density (ρ)</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">Mass per unit volume of tissue; approximated as ≈1,000 kg/m³ for soft
+                            myocardial tissue in μ = ρc².</p>
+                        <p class="caption">Section: 3-3 (introduced) · also used in 3-4 equations</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-displacement-field">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Displacement field</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">The micrometric axial tissue motion produced by a passing shear wave,
+                            extracted by cross-correlation of successive RF frames.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-focused-push-pulse">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Focused push pulse</p>
+                            <span class="tag">3-2</span>
+                        </div>
+                        <p class="glossary-def">A high-intensity ultrasound burst (several hundred microseconds) that
+                            concentrates ARF at the beam focal point to launch a shear wave.</p>
+                        <a class="eqg-jump-link" href="module3-2.html">Module 3-2 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-frame-rate">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Frame rate</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">Number of image frames acquired per second (fps). Must exceed roughly
+                            1,000 fps to resolve shear wave propagation, versus 30–100 fps for conventional
+                            line-by-line imaging.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-guided-wave">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Guided wave</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="glossary-def">A wave whose propagation is shaped by bounding surfaces (here, the
+                            endocardium and epicardium) when wavelength approaches wall thickness.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-isotropic">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Isotropic</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="glossary-def">Having identical mechanical properties in all directions. μ = ρc²
+                            assumes isotropic tissue — an assumption the anisotropic myocardium violates.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-lateral-resolution">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Lateral resolution</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">Image sharpness in the direction perpendicular to the ultrasound beam
+                            axis. Lower for single-angle plane wave transmission than for a focused beam.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-myocardial-stiffness">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Myocardial stiffness (MS)</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="glossary-def">The intrinsic mechanical property of cardiac tissue describing its
+                            resistance to deformation. This is the quantity SWE aims to estimate, by measuring shear
+                            wave velocity and converting it to shear modulus via μ = ρc².</p>
+                        <p class="caption">Section: Home page / Module 3 intro (3-1)</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-natural-shear-wave">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Natural shear wave</p>
+                            <span class="tag">3-2</span>
+                        </div>
+                        <p class="glossary-def">A shear wave generated spontaneously by mechanical events in the
+                            cardiac cycle, such as valve closure, without an external push pulse.</p>
+                        <p class="caption">Section: 3-2 (introduced) · also referenced in 3-4 (dispersion discussion)
+                        </p>
+                        <a class="eqg-jump-link" href="module3-2.html">Module 3-2 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-plane-wave">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Plane wave</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">An unfocused ultrasound transmission that illuminates the entire
+                            field of view in a single transmit event, enabling frame rates far beyond focused,
+                            line-by-line imaging.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-reflection">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Reflection</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="glossary-def">A secondary wave front produced when a propagating shear wave meets a
+                            tissue boundary (endocardium, pericardium) or structural discontinuity; can interfere with
+                            the primary wave and complicate velocity estimation.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-shear-modulus">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Shear modulus (μ)</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="glossary-def">A measure of a tissue's resistance to sideways (shear) deformation;
+                            relates to shear wave velocity via μ = ρc².</p>
+                        <p class="caption">Section: 3-1 (introduced) · defined formally in 3-3 · assumptions examined
+                            in 3-4</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-shear-wave">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Shear wave</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="glossary-def">A mechanical wave in which particles move perpendicular to the
+                            direction of propagation. Cannot travel through liquids.</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-shear-wave-dispersion">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Shear wave dispersion</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="glossary-def">The phenomenon in which higher-frequency shear wave components travel
+                            faster than lower-frequency ones in a viscoelastic material.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-swe">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Shear wave elastography (SWE)</p>
+                            <span class="tag">3-1</span>
+                        </div>
+                        <p class="glossary-def">A technique that infers tissue stiffness from the velocity of shear
+                            waves traveling through it.</p>
+                        <p class="caption">Section: Home page / Module 3 intro (3-1)</p>
+                        <a class="eqg-jump-link" href="module3-1.html">Module 3-1 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-snr">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Signal-to-noise ratio (SNR)</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">A measure of image quality; lower for single-angle plane wave
+                            transmission than for a focused beam, recovered in part by coherent compounding.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-temporal-resolution">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Temporal resolution</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">An imaging system's ability to resolve events closely spaced in time.
+                            Ultrafast frame rates (&gt;1,000 fps) provide the temporal resolution needed to track
+                            shear wave propagation frame by frame.</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-valve-closure">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Valve closure</p>
+                            <span class="tag">3-2</span>
+                        </div>
+                        <p class="glossary-def">Mitral valve closure (isovolumetric contraction) and aortic valve
+                            closure (isovolumetric relaxation) generate transients that propagate through the
+                            myocardium as shear waves.</p>
+                        <a class="eqg-jump-link" href="module3-2.html">Module 3-2 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-viscoelasticity">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Viscoelasticity</p>
+                            <span class="tag">3-4</span>
+                        </div>
+                        <p class="glossary-def">A material behavior combining elastic and viscous components, so
+                            tissue response depends on the rate of deformation. The myocardium's viscoelasticity is
+                            what causes shear wave dispersion.</p>
+                        <a class="eqg-jump-link" href="module3-4.html">Module 3-4 →</a>
+                    </div>
+
+                    <div class="eqg-item" id="glossary-youngs-modulus">
+                        <div class="eqg-item-head">
+                            <p class="glossary-term">Young's modulus (E)</p>
+                            <span class="tag">3-3</span>
+                        </div>
+                        <p class="glossary-def">Tissue stiffness measure derived from the shear modulus via E ≈ 3μ
+                            under the near-incompressibility assumption; reported in kPa.</p>
+                        <p class="caption">Section: 3-3 (introduced) · assumptions examined in 3-4</p>
+                        <a class="eqg-jump-link" href="module3-3.html">Module 3-3 →</a>
+                    </div>
+                </div>
+                </div>
+
+                <p class="eqg-no-results" id="eqgNoResults" hidden>No matching equations or glossary terms.</p>
+
+                <div class="section-nav">
+                    <a href="index.html#modules" class="btn btn-ghost">All Modules</a>
+                    <button class="btn btn-ghost" data-action="back-to-top">Back to Top</button>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <footer class="site-footer">
+        <p>Visualizing Ultrafast Ultrasound Physics for Pediatric Myocardial Stiffness Assessment © 2026 Qingyue Guo ·
+            University of Toronto</p>
+    </footer>
+
+    <script src="script.js" defer></script>
 </body>
 
 </html>

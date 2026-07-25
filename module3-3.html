@@ -383,6 +383,16 @@
           <p class="eq-note">Valid under the near-incompressibility assumption (Section 1). Both μ and E are reported in
             kPa.</p>
         </div>
+        <div class="eq-item">
+          <p class="eq-name">Conventional frame time (line-by-line imaging)</p>
+          <p class="eq-formula">frame time ≈ (2d / c₀) × N</p>
+          <p class="eq-note">d = imaging depth, c₀ = speed of sound in tissue (~1,540 m/s), N = number of scan lines.</p>
+        </div>
+        <div class="eq-item">
+          <p class="eq-name">Ultrafast frame interval</p>
+          <p class="eq-formula">frame interval = 1 / FR</p>
+          <p class="eq-note">FR = frame rate (Hz).</p>
+        </div>
       </div>
       <div class="ref-panel-content" data-panel="glossary" hidden>
         <div class="glossary-item">
@@ -404,6 +414,32 @@
           <p class="glossary-term">Shear modulus (μ) / Young's modulus (E)</p>
           <p class="glossary-def">Tissue stiffness measures derived from shear wave velocity via μ = ρc², with E ≈ 3μ
             under near-incompressibility.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Density (ρ)</p>
+          <p class="glossary-def">Mass per unit volume of tissue; approximated as ≈1,000 kg/m³ for soft myocardial
+            tissue in μ = ρc².</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Frame rate</p>
+          <p class="glossary-def">Number of image frames acquired per second (fps). Must exceed roughly 1,000 fps to
+            resolve shear wave propagation, versus 30–100 fps for conventional line-by-line imaging.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Lateral resolution</p>
+          <p class="glossary-def">Image sharpness in the direction perpendicular to the ultrasound beam axis. Lower
+            for single-angle plane wave transmission than for a focused beam.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Signal-to-noise ratio (SNR)</p>
+          <p class="glossary-def">A measure of image quality; lower for single-angle plane wave transmission than for
+            a focused beam, recovered in part by coherent compounding.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Temporal resolution</p>
+          <p class="glossary-def">An imaging system's ability to resolve events closely spaced in time. Ultrafast
+            frame rates (&gt;1,000 fps) provide the temporal resolution needed to track shear wave propagation frame by
+            frame.</p>
         </div>
       </div>
       <div class="ref-panel-content" data-panel="sources" hidden>

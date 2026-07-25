@@ -22,7 +22,119 @@ document.addEventListener('DOMContentLoaded', () => {
   initDispersionInteractive();
   initGuidedWaveInteractive();
   initAnisotropyInteractive();
+  initEquationsGlossarySearch();
 });
+
+/* ---------- Equations & Glossary page: live search ----------
+   Filters .eqg-item entries (both the Equations and Glossary lists)
+   against each item's own NAME (.eq-name / .glossary-term) plus its
+   section tag — not the full definition text. Matching the whole
+   card's body copy made "wave" match nearly every entry on a page
+   that's fundamentally about shear waves (almost every definition
+   mentions "wave" somewhere), which buried the entry actually named
+   "Shear wave" in a wall of barely-filtered results. Matching just
+   the name makes the search behave like an actual glossary lookup:
+   typing "wave" narrows down to the handful of entries named for it.
+
+   Beyond filtering, three things make the "searching" state visibly
+   distinct from plain browsing (rather than just a shorter version of
+   the same list, which read as confusing since there was no obvious
+   way back to the full list besides manually erasing the text):
+     - the matched substring is wrapped in <mark> inside the visible
+       name, so a hit is visually obvious at a glance;
+     - a status line reports "Showing N of TOTAL for '<query>'";
+     - a clear (×) button appears whenever there's text, restoring the
+       full list in one click instead of requiring manual deletion.
+   A .eqg-group (heading + list) is hidden entirely once none of its
+   items match, and #eqgNoResults shows only when nothing on the page
+   matches at all. */
+function initEquationsGlossarySearch() {
+  const input = document.getElementById('eqgSearchInput');
+  if (!input) return;
+
+  const clearBtn = document.getElementById('eqgSearchClear');
+  const status = document.getElementById('eqgSearchStatus');
+  const groups = Array.from(document.querySelectorAll('.eqg-group'));
+
+  const entries = Array.from(document.querySelectorAll('.eqg-item')).map((item) => {
+    const nameEl = item.querySelector('.eq-name, .glossary-term');
+    const tagEl = item.querySelector('.tag');
+    const originalName = nameEl ? nameEl.textContent : '';
+    const tagText = tagEl ? tagEl.textContent : '';
+    return {
+      item,
+      nameEl,
+      originalName,
+      searchText: `${originalName} ${tagText}`.toLowerCase(),
+    };
+  });
+
+  const totalCount = entries.length;
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  }
+
+  // Rewrites the name element's markup to wrap the first matched
+  // substring in <mark>, falling back to the plain original text
+  // whenever there's no active query or no match to highlight — so a
+  // cleared search always leaves the name exactly as authored.
+  function renderName(nameEl, original, query) {
+    if (!nameEl) return;
+    if (!query) {
+      nameEl.textContent = original;
+      return;
+    }
+    const idx = original.toLowerCase().indexOf(query);
+    if (idx === -1) {
+      nameEl.textContent = original;
+      return;
+    }
+    const before = escapeHtml(original.slice(0, idx));
+    const match = escapeHtml(original.slice(idx, idx + query.length));
+    const after = escapeHtml(original.slice(idx + query.length));
+    nameEl.innerHTML = `${before}<mark>${match}</mark>${after}`;
+  }
+
+  function apply() {
+    const rawQuery = input.value.trim();
+    const query = rawQuery.toLowerCase();
+    let visibleCount = 0;
+
+    entries.forEach(({ item, nameEl, originalName, searchText }) => {
+      const matches = !query || searchText.includes(query);
+      item.hidden = !matches;
+      if (matches) visibleCount++;
+      renderName(nameEl, originalName, matches ? query : '');
+    });
+
+    groups.forEach((group) => {
+      const anyVisible = group.querySelectorAll('.eqg-item:not([hidden])').length > 0;
+      group.hidden = !anyVisible;
+    });
+
+    if (clearBtn) clearBtn.hidden = rawQuery.length === 0;
+
+    if (status) {
+      status.hidden = rawQuery.length === 0;
+      if (rawQuery.length > 0) {
+        status.innerHTML = `Showing <strong>${visibleCount}</strong> of ${totalCount} for "${escapeHtml(rawQuery)}". Clear the box (or click ×) to bring back the full list.`;
+      }
+    }
+  }
+
+  input.addEventListener('input', apply);
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      input.focus();
+      apply();
+    });
+  }
+
+  apply();
+}
 
 /* ---------- Left navigation drawer (collapse only; always starts open) ---------- */
 function initNavDrawer() {
