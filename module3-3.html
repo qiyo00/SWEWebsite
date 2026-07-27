@@ -33,7 +33,8 @@
     <div class="nav-backdrop" id="navBackdrop"></div>
 
     <aside class="nav-drawer" id="navDrawer">
-      <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Toggle navigation" data-tooltip="Navigation">‹</button>
+      <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Toggle navigation"
+        data-tooltip="Navigation">‹</button>
       <nav class="drawer-nav">
         <p class="drawer-title">Navigation</p>
         <ul>
@@ -65,21 +66,29 @@
         <div class="figure-placeholder has-image">
           <div class="figure-image-wrap">
             <span class="figure-row-tag">Low frame rate — 1 frame / 10 s</span>
-            <img class="figure-image" src="mrp-June/images/3-3-1long.png" alt="A car crosses a city skyline, captured at t = 0 s, 10 s, and 20 s. With only three widely spaced frames, the displacement and velocity (Δd = ?, v = Δd/Δt = ?) cannot be determined from the resulting position-versus-time plot.">
+            <img class="figure-image" src="mrp-June/images/3-3-1long.png"
+              alt="A car crosses a city skyline, captured at t = 0 s, 10 s, and 20 s. With only three widely spaced frames, the displacement and velocity (Δd = ?, v = Δd/Δt = ?) cannot be determined from the resulting position-versus-time plot.">
           </div>
           <div class="figure-image-wrap">
             <span class="figure-row-tag">High frame rate — 1 frame / 1 s</span>
-            <img class="figure-image" src="mrp-June/images/3-3-1short.png" alt="The same car crossing the skyline, now captured at t = 0 s, 1 s, and 2 s. The closely spaced frames trace out a clear position-versus-time slope, giving Δd = 60 m and v = Δd/Δt = 30 m/s.">
+            <img class="figure-image" src="mrp-June/images/3-3-1short.png"
+              alt="The same car crossing the skyline, now captured at t = 0 s, 1 s, and 2 s. The closely spaced frames trace out a clear position-versus-time slope, giving Δd = 60 m and v = Δd/Δt = 30 m/s.">
           </div>
-          <p class="figure-caption"><strong class="figure-caption-label">Figure 1.</strong> Tracking a <strong style="color: var(--accent);">car</strong>'s position across video frames at a low frame rate versus a high frame rate. Sparse frames (top) leave too few points to estimate velocity reliably, while densely sampled frames (bottom) trace out a clear trajectory and a well-defined velocity. The same principle governs how frame rate limits the ability to estimate shear wave velocity.</p>
+          <p class="figure-caption"><strong class="figure-caption-label">Figure 1.</strong> Tracking a <strong
+              style="color: var(--accent);">car</strong>'s position across video frames at a low frame rate versus a
+            high frame rate. Sparse frames (top) leave too few points to estimate velocity reliably, while densely
+            sampled frames (bottom) trace out a clear trajectory and a well-defined velocity. The same principle governs
+            how frame rate limits the ability to estimate shear wave velocity.</p>
         </div>
 
         <p class="body-text">Estimating wave velocity requires observing the wave front at multiple positions across
           time. The more time points captured, the more reliable the estimate. The same principle applies to any moving
-          object: a camera shooting at 10 <strong>frames per second (fps)</strong> cannot resolve the trajectory of a fast-moving
+          object: a camera shooting at 10 <strong>frames per second (fps)</strong> cannot resolve the trajectory of a
+          fast-moving
           subject, whereas a high-velocity camera shooting at thousands of frames per second can. Shear waves in
           myocardial tissue travel at roughly 1 to 10 m/s and traverse a region of interest in tens of milliseconds, so
-          the imaging system must acquire frames <strong>rapidly enough</strong> to capture the wave front at several positions within
+          the imaging system must acquire frames <strong>rapidly enough</strong> to capture the wave front at several
+          positions within
           that window.</p>
 
         <div class="panel interactive-panel">
@@ -100,10 +109,13 @@
               <div class="uvc-row" data-mode="conventional">
                 <div class="uvc-row-main">
                   <div class="uvc-row-header">
-                    <span class="uvc-row-title" style="color: var(--accent-violet);">Conventional focused ultrasound</span>
+                    <span class="uvc-row-title" style="color: var(--accent-violet);">Conventional focused
+                      ultrasound</span>
                     <div class="uvc-legend" aria-hidden="true">
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-wave"></span>shear wave</span>
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-scanline"></span>scan line</span>
+                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-wave"></span>shear
+                        wave</span>
+                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-scanline"></span>scan
+                        line</span>
                     </div>
                   </div>
 
@@ -128,8 +140,8 @@
                         <span>Imaging depth</span>
                         <span id="convDepthLabel">10 cm</span>
                       </div>
-                      <input type="range" class="wave-slider" id="convDepthSlider" min="3" max="15" step="1"
-                        value="10" aria-label="Conventional panel — imaging depth">
+                      <input type="range" class="wave-slider" id="convDepthSlider" min="3" max="15" step="1" value="10"
+                        aria-label="Conventional panel — imaging depth">
                     </div>
                   </div>
 
@@ -158,8 +170,10 @@
                   <div class="uvc-row-header">
                     <span class="uvc-row-title" style="color: var(--accent);">Ultrafast plane-wave ultrasound</span>
                     <div class="uvc-legend" aria-hidden="true">
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-wave"></span>shear wave</span>
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-sample"></span>frame sample</span>
+                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-wave"></span>shear
+                        wave</span>
+                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-sample"></span>frame
+                        sample</span>
                     </div>
                   </div>
 
@@ -185,7 +199,8 @@
                         <span id="ultraFpsLabel">5,000 fps</span>
                       </div>
                       <input type="range" class="wave-slider" id="ultraFpsSlider" min="100" max="7700" step="100"
-                        value="5000" aria-label="Ultrafast panel — frame rate, capped at the round-trip-time limit for a 10 cm imaging depth">
+                        value="5000"
+                        aria-label="Ultrafast panel — frame rate, capped at the round-trip-time limit for a 10 cm imaging depth">
                     </div>
                   </div>
 
@@ -221,7 +236,8 @@
         </div>
 
         <h3>Conventional frame rates are insufficient for shear wave tracking</h3>
-        <p class="body-text">In <strong style="color: var(--accent-violet);">conventional focused ultrasound</strong>, images are formed <strong>line by line</strong>: each scan line requires
+        <p class="body-text">In <strong style="color: var(--accent-violet);">conventional focused ultrasound</strong>,
+          images are formed <strong>line by line</strong>: each scan line requires
           a dedicated transmit-receive cycle, and the minimum duration of each cycle is determined by the round-trip
           travel time of sound to the imaging depth and back. At a depth of 10 cm in tissue, this round-trip travel
           takes approximately 130 µs. With a typical 2D image requiring 100 or more scan lines, the resulting frame rate
@@ -230,19 +246,25 @@
           velocity reliably.</p>
 
         <h3>Plane wave transmission enables ultrafast acquisition</h3>
-        <p class="body-text"><strong style="color: var(--accent);">Ultrafast ultrasound</strong> replaces focused line-by-line transmission with a single unfocused
+        <p class="body-text"><strong style="color: var(--accent);">Ultrafast ultrasound</strong> replaces focused
+          line-by-line transmission with a single unfocused
           <strong>plane wave</strong> that illuminates the entire field of view in one transmit event. Because one
           transmission covers the full image rather than a single scan line, frame rates exceeding 1,000 fps are
           achievable, with rates up to approximately 10,000 fps demonstrated in research settings. This <strong>temporal
-          resolution</strong> is sufficient to track shear wave propagation frame by frame as it traverses the myocardium.</p>
+            resolution</strong> is sufficient to track shear wave propagation frame by frame as it traverses the
+          myocardium.
+        </p>
 
         <div class="callout callout-highlight">
           <p class="callout-label">Trade-off</p>
-          <p class="callout-text">The trade-off is image quality: a single plane wave has lower <strong>lateral resolution</strong> and
-            <strong>signal-to-noise ratio</strong> than a focused beam. <strong>Coherent compounding</strong>, combining images from
+          <p class="callout-text">The trade-off is image quality: a single plane wave has lower <strong>lateral
+              resolution</strong> and
+            <strong>signal-to-noise ratio</strong> than a focused beam. <strong>Coherent compounding</strong>, combining
+            images from
             multiple angled plane wave transmissions, recovers much of this quality while maintaining frame rates well
             above those of conventional imaging. For shear wave tracking, single-angle plane wave sequences are often
-            used in practice to maximize temporal resolution, with image quality accepted as a secondary constraint.</p>
+            used in practice to maximize temporal resolution, with image quality accepted as a secondary constraint.
+          </p>
         </div>
 
         <h3>Displacement is tracked by ultrafast ultrasound</h3>
@@ -254,10 +276,13 @@
         <h3>From shear wave velocity to myocardial stiffness</h3>
         <p class="body-text">As the shear wave propagates laterally, its position at each time point is identified from
           the displacement field. Velocity is then derived from the distance traveled per unit time.</p>
-        <p class="body-text"><strong style="color: var(--accent)">Shear wave velocity (c)</strong> is related to <strong style="color: var(--accent-amber)">shear modulus (μ)</strong> by:</p>
-        <p class="formula-block formula"><strong><span style="color: var(--accent-amber)">μ</span> = ρ<span style="color: var(--accent)">c</span>²</strong></p>
+        <p class="body-text"><strong style="color: var(--accent)">Shear wave velocity (c)</strong> is related to <strong
+            style="color: var(--accent-amber)">shear modulus (μ)</strong> by:</p>
+        <p class="formula-block formula"><strong><span style="color: var(--accent-amber)">μ</span> = ρ<span
+              style="color: var(--accent)">c</span>²</strong></p>
         <p class="body-text">where ρ is tissue density, assumed to be approximately 1,000 kg/m³ for soft tissue. Under
-          the near-incompressibility assumption established in <a href="module3-1.html"><u>Module 3-1</u></a>, <strong>Young's modulus (E)</strong> can be approximated as:</p>
+          the near-incompressibility assumption established in <a href="module3-1.html"><u>Module 3-1</u></a>,
+          <strong>Young's modulus (E)</strong> can be approximated as:</p>
         <p class="formula-block formula">E ≈ 3<strong style="color: var(--accent-amber)">μ</strong></p>
         <p class="body-text">Some clinical systems report myocardial stiffness as Young's modulus rather than shear
           modulus using this approximation. Both quantities are reported in kilopascals (kPa).</p>
@@ -280,8 +305,8 @@
                   <span style="color: var(--accent)">Velocity of shear wave (c)</span>
                   <span id="tofvVelocityLabel" data-var="velocity">2.0 m/s</span>
                 </div>
-                <input type="range" class="wave-slider tofv-velocity-slider" id="tofvVelocitySlider" min="1"
-                  max="10" step="0.5" value="2" aria-label="Wave speed">
+                <input type="range" class="wave-slider tofv-velocity-slider" id="tofvVelocitySlider" min="1" max="10"
+                  step="0.5" value="2" aria-label="Wave speed">
               </div>
             </div>
 
@@ -317,7 +342,8 @@
                 <span class="tofv-formula-op">=</span>
                 <span class="tofv-formula-value">1000</span>
                 <span class="tofv-formula-op">×</span>
-                <span class="tofv-formula-value" data-var="velocity"><span id="tofvFormulaC">2.0</span><sup>2</sup></span>
+                <span class="tofv-formula-value" data-var="velocity"><span
+                    id="tofvFormulaC">2.0</span><sup>2</sup></span>
                 <span class="tofv-formula-op">=</span>
                 <span class="tofv-formula-value tofv-formula-result" data-var="shear" id="tofvFormulaMu">4.0
                   kPa</span>
@@ -365,7 +391,8 @@
     </main>
 
     <aside class="ref-panel" id="refPanel">
-      <button class="icon-btn ref-toggle" id="refToggle" aria-label="Toggle reference panel" data-tooltip="Equations, Glossary &amp; Sources">‹</button>
+      <button class="icon-btn ref-toggle" id="refToggle" aria-label="Toggle reference panel"
+        data-tooltip="Equations, Glossary &amp; Sources">‹</button>
       <div class="ref-tabs">
         <button class="ref-tab active" data-tab="equations">Equations</button>
         <button class="ref-tab" data-tab="glossary">Glossary</button>
@@ -386,7 +413,8 @@
         <div class="eq-item">
           <p class="eq-name">Conventional frame time (line-by-line imaging)</p>
           <p class="eq-formula">frame time ≈ (2d / c₀) × N</p>
-          <p class="eq-note">d = imaging depth, c₀ = speed of sound in tissue (~1,540 m/s), N = number of scan lines.</p>
+          <p class="eq-note">d = imaging depth, c₀ = speed of sound in tissue (~1,540 m/s), N = number of scan lines.
+          </p>
         </div>
         <div class="eq-item">
           <p class="eq-name">Ultrafast frame interval</p>
@@ -443,7 +471,62 @@
         </div>
       </div>
       <div class="ref-panel-content" data-panel="sources" hidden>
-        <p class="sources-note">Source citations for this section will be added here.</p>
+        <div class="source-item">
+          <p class="source-citation">Cikes M, D'hooge J, Solomon SD. <a class="source-title-link"
+              href="https://doi.org/10.1016/B978-0-323-39226-6.00001-1" target="_blank"
+              rel="noopener noreferrer">Physical principles of ultrasound and generation of images.</a> In:
+            <em>Essential Echocardiography: A Companion to Braunwald's Heart Disease</em>. Elsevier; 2019:chap 1. <a
+              class="source-doi-link" href="https://doi.org/10.1016/B978-0-323-39226-6.00001-1" target="_blank"
+              rel="noopener noreferrer">doi:10.1016/B978-0-323-39226-6.00001-1</a></p>
+          <p class="source-note">Directly supports the conventional frame-rate calculation (pulse-echo timing, scan
+            lines, ~28 fps) and the plane-wave/diverging-wave frame-rate figures (up to 1&ndash;5 kHz).</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Szabo TL. <a class="source-title-link"
+              href="https://doi.org/10.1016/B978-0-12-396487-8.00016-1" target="_blank"
+              rel="noopener noreferrer">Elastography.</a> In: <em>Diagnostic Ultrasound Imaging: Inside Out</em>.
+            Elsevier; 2014:699-734. <a class="source-doi-link" href="https://doi.org/10.1016/B978-0-12-396487-8.00016-1"
+              target="_blank" rel="noopener noreferrer">doi:10.1016/B978-0-12-396487-8.00016-1</a></p>
+          <p class="source-note">Supports plane-wave/ultrafast acquisition and the &mu; = &rho;c&sup2; inversion.</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Tanter M, Fink M. <a class="source-title-link"
+              href="https://doi.org/10.1109/TUFFC.2014.6689779" target="_blank" rel="noopener noreferrer">Ultrafast
+              imaging in biomedical ultrasound.</a> <em>IEEE Trans Ultrason Ferroelectr Freq Control</em>.
+            2014;61(1):102-119. <a class="source-doi-link" href="https://doi.org/10.1109/TUFFC.2014.6689779"
+              target="_blank" rel="noopener noreferrer">doi:10.1109/TUFFC.2014.6689779</a></p>
+          <p class="source-note">The foundational reference for plane-wave/GPU-based ultrafast acquisition; supports the
+            &gt;1,000 fps claim and the shift from focused line-by-line to single-transmission imaging.</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Villemain O, Baranger J, Friedberg MK, et al. <a class="source-title-link"
+              href="https://doi.org/10.1016/j.jcmg.2019.09.019" target="_blank" rel="noopener noreferrer">Ultrafast
+              ultrasound imaging in pediatric and adult cardiology: techniques, applications, and perspectives.</a>
+            <em>JACC Cardiovasc Imaging</em>. 2020;13(8):1771-1791. <a class="source-doi-link"
+              href="https://doi.org/10.1016/j.jcmg.2019.09.019" target="_blank"
+              rel="noopener noreferrer">doi:10.1016/j.jcmg.2019.09.019</a></p>
+          <p class="source-note">Supports the frame-rate figures (ultrafast imaging up to ~100&times; conventional) and
+            the plane-wave transmission description.</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Villemain O, Correia M, Mousseaux E, et al. <a class="source-title-link"
+              href="https://doi.org/10.1016/j.jcmg.2018.02.002" target="_blank" rel="noopener noreferrer">Myocardial
+              stiffness evaluation using noninvasive shear wave imaging in healthy and hypertrophic cardiomyopathic
+              adults.</a> <em>JACC Cardiovasc Imaging</em>. 2019;12(7):1135-1145. <a class="source-doi-link"
+              href="https://doi.org/10.1016/j.jcmg.2018.02.002" target="_blank"
+              rel="noopener noreferrer">doi:10.1016/j.jcmg.2018.02.002</a></p>
+          <p class="source-note">Source of the normal/elevated kPa reference values used for the clinical labeling in
+            the worked example.</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Villalobos Lizardi JC, Baranger J, Nguyen MB, et al. <a class="source-title-link"
+              href="https://doi.org/10.1038/s44161-021-00007-3" target="_blank" rel="noopener noreferrer">A guide for
+              assessment of myocardial stiffness in health and disease.</a> <em>Nat Cardiovasc Res</em>. 2022;1(1):8-22.
+            <a class="source-doi-link" href="https://doi.org/10.1038/s44161-021-00007-3" target="_blank"
+              rel="noopener noreferrer">doi:10.1038/s44161-021-00007-3</a></p>
+          <p class="source-note">Box 2 derives E &asymp; 3&mu; from Poisson's ratio (&nu; &asymp; 0.5 for
+            near-incompressible tissue).</p>
+        </div>
       </div>
     </aside>
 

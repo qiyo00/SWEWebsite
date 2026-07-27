@@ -2487,10 +2487,36 @@ h2 {
   color: var(--text-2);
 }
 
-.sources-note {
+.source-item {
+  margin-bottom: 1.25rem;
+}
+
+.source-item:last-child {
+  margin-bottom: 0;
+}
+
+.source-citation {
   font-size: var(--fs-body-sm);
+  color: var(--text-1);
+  margin-bottom: 0.35rem;
+  line-height: 1.4;
+}
+
+.source-title-link {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.source-title-link:hover,
+.source-title-link:focus-visible,
+.source-doi-link:hover,
+.source-doi-link:focus-visible {
+  text-decoration: underline;
+}
+
+.source-note {
+  font-size: var(--fs-caption);
   color: var(--text-2);
-  font-style: italic;
 }
 
 /* =========================================================

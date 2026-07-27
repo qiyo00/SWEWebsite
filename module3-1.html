@@ -33,17 +33,21 @@
     <div class="nav-backdrop" id="navBackdrop"></div>
 
     <aside class="nav-drawer" id="navDrawer">
-      <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Toggle navigation" data-tooltip="Navigation">‹</button>
+      <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Toggle navigation"
+        data-tooltip="Navigation">‹</button>
       <nav class="drawer-nav">
         <p class="drawer-title">Navigation</p>
         <ul>
           <li><a href="module3-1.html" data-section="1"><span class="drawer-bullet"></span>3-1: Two Types of Mechanical
               Waves</a></li>
-          <li><a href="module3-2.html" data-section="2"><span class="drawer-bullet"></span>3-2: Shear Wave Generation in the
+          <li><a href="module3-2.html" data-section="2"><span class="drawer-bullet"></span>3-2: Shear Wave Generation in
+              the
               Myocardium</a></li>
-          <li><a href="module3-3.html" data-section="3"><span class="drawer-bullet"></span>3-3: Tracking Shear Waves with
+          <li><a href="module3-3.html" data-section="3"><span class="drawer-bullet"></span>3-3: Tracking Shear Waves
+              with
               Ultrafast Ultrasound</a></li>
-          <li><a href="module3-4.html" data-section="4"><span class="drawer-bullet"></span>3-4: Limitations and Real-World
+          <li><a href="module3-4.html" data-section="4"><span class="drawer-bullet"></span>3-4: Limitations and
+              Real-World
               Considerations</a></li>
         </ul>
       </nav>
@@ -55,8 +59,10 @@
       <div class="module-intro">
         <p class="eyebrow">Module 3</p>
         <h1>The Mechanism of <span style="color: var(--accent);">Shear Wave</span> Elastography</h1>
-        <p class="body-text">Shear-wave elastography (SWE) infers myocardial stiffness (MS) from the velocity of a shear wave
-          traveling through cardiac tissue. This module will walk you through the process — from definitions and wave generation,
+        <p class="body-text">Shear-wave elastography (SWE) infers myocardial stiffness (MS) from the velocity of a shear
+          wave
+          traveling through cardiac tissue. This module will walk you through the process — from definitions and wave
+          generation,
           through ultrafast tracking, to its limitations and real-world considerations.</p>
       </div>
 
@@ -66,24 +72,28 @@
         <div class="panel objectives-panel">
           <div class="objective-item">
             <span class="objective-marker"></span>
-            <p class="body-text">Explain the difference between <strong>compressional and shear waves</strong>, and why shear wave
+            <p class="body-text">Explain the difference between <strong>compressional and shear waves</strong>, and why
+              shear wave
               velocity reflects myocardial stiffness.</p>
           </div>
           <div class="objective-item">
             <span class="objective-marker"></span>
-            <p class="body-text">Describe how <strong>acoustic radiation force</strong> and mechanical events during valve
-            closure generate localized shear waves in myocardial
+            <p class="body-text">Describe how <strong>acoustic radiation force</strong> and mechanical events during
+              valve
+              closure generate localized shear waves in myocardial
               tissue.</p>
           </div>
           <div class="objective-item">
             <span class="objective-marker"></span>
-            <p class="body-text">Explain why <strong>ultrafast</strong> frame rates above 1,000 fps are required to measure the velocity
+            <p class="body-text">Explain why <strong>ultrafast</strong> frame rates above 1,000 fps are required to
+              measure the velocity
               of
               shear wave.</p>
           </div>
           <div class="objective-item">
             <span class="objective-marker"></span>
-            <p class="body-text">Identify how <strong>viscoelasticity</strong>, <strong>anisotropy</strong>, and <strong>wall geometry</strong> affect shear wave
+            <p class="body-text">Identify how <strong>viscoelasticity</strong>, <strong>anisotropy</strong>, and
+              <strong>wall geometry</strong> affect shear wave
               measurements and their interpretation.</p>
           </div>
         </div>
@@ -95,26 +105,33 @@
         <p class="eyebrow">Module 3-1</p>
         <h2>Two Types of Mechanical Waves</h2>
         <p class="body-text">Mechanical waves travel by passing energy from particle to particle. The two types relevant
-          to tissue mechanics differ in one key respect: how particles move relative to the <strong>direction</strong> of propagation.
+          to tissue mechanics differ in one key respect: how particles move relative to the <strong>direction</strong>
+          of propagation.
         </p>
-        <p class="body-text">In a <strong style="color: var(--accent-violet);">compressional wave</strong>, particles oscillate <strong>parallel</strong> to the direction of
+        <p class="body-text">In a <strong style="color: var(--accent-violet);">compressional wave</strong>, particles
+          oscillate <strong>parallel</strong> to the direction of
           propagation, producing alternating zones of compression (high pressure) and rarefaction (low pressure). Sound
           is an example: a speaker pushes air forward and pulls it back, sending alternating high- and low-pressure
           zones outward. The ultrasound pulse in conventional B-mode imaging works the same way.</p>
 
         <div class="figure-placeholder has-image">
-          <img class="figure-image" src="mrp-June/images/3-1-figure2.svg" alt="A speaker emits a compressional wave toward an ear: curved wavefronts and a dot grid show alternating high- and low-pressure zones traveling in the direction of propagation, from the speaker to the listener.">
-          <p class="figure-caption"><strong class="figure-caption-label">Figure 1.</strong> Compressional wave. A speaker producing alternating high- and
+          <img class="figure-image" src="mrp-June/images/3-1-figure2.svg"
+            alt="A speaker emits a compressional wave toward an ear: curved wavefronts and a dot grid show alternating high- and low-pressure zones traveling in the direction of propagation, from the speaker to the listener.">
+          <p class="figure-caption"><strong class="figure-caption-label">Figure 1.</strong> Compressional wave. A
+            speaker producing alternating high- and
             low-pressure zones that travel toward a listener along the direction of propagation.</p>
         </div>
 
-        <p class="body-text">In a <strong style="color: var(--accent);">shear wave</strong>, particles move <strong>perpendicular</strong> to the direction of
+        <p class="body-text">In a <strong style="color: var(--accent);">shear wave</strong>, particles move
+          <strong>perpendicular</strong> to the direction of
           propagation. If you hold one end of a rope and flick it sideways, the disturbance travels forward along
           the rope, but the rope itself moves up and down.</p>
 
         <div class="figure-placeholder has-image">
-          <img class="figure-image" src="mrp-June/images/3-1-figure1.svg" alt="A hand flicks one end of a rope, sending a shear wave rightward: small arrows show particle motion moving up and down, perpendicular to the direction of propagation, with a matching dot-grid pattern below.">
-          <p class="figure-caption"><strong class="figure-caption-label">Figure 2.</strong> Shear wave. Particle motion is perpendicular to the direction the wave travels,
+          <img class="figure-image" src="mrp-June/images/3-1-figure1.svg"
+            alt="A hand flicks one end of a rope, sending a shear wave rightward: small arrows show particle motion moving up and down, perpendicular to the direction of propagation, with a matching dot-grid pattern below.">
+          <p class="figure-caption"><strong class="figure-caption-label">Figure 2.</strong> Shear wave. Particle motion
+            is perpendicular to the direction the wave travels,
             like a flicked rope.</p>
         </div>
 
@@ -128,14 +145,20 @@
         <p class="body-text">The rationale for SWE follows from an asymmetry
           between the two wave types: when myocardial tissue stiffens, shear wave velocity changes, but compressional
           wave velocity does not.</p>
-        <p class="body-text"><strong style="color: var(--accent-violet);">Compressional wave</strong> velocity is determined by a tissue's resistance to
+        <p class="body-text"><strong style="color: var(--accent-violet);">Compressional wave</strong> velocity is
+          determined by a tissue's resistance to
           volumetric compression. Soft biological tissues, including the myocardium, are nearly incompressible. This
           resistance changes little with mechanical state, so compressional wave velocity remains approximately constant
           at around 1,540 m/s regardless of pathological changes such as fibrosis and hypertrophy. Because this velocity
-          does not change with stiffening, compressional wave velocity carries no information about myocardial stiffness, though its constancy is precisely what conventional B-mode imaging relies on to reconstruct images.</p>
-        <p class="body-text"><strong style="color: var(--accent);">Shear wave</strong> velocity, by contrast, varies directly with a tissue property
-          called the <strong style="color: var(--accent-amber);">shear modulus (μ)</strong>, a measure of resistance to sideways deformation (<a href="module3-3.html">see
-            <u>Module 3-3</u></a>). Stiffer tissue produces faster shear waves; softer tissue produces slower ones. Pathological
+          does not change with stiffening, compressional wave velocity carries no information about myocardial
+          stiffness, though its constancy is precisely what conventional B-mode imaging relies on to reconstruct images.
+        </p>
+        <p class="body-text"><strong style="color: var(--accent);">Shear wave</strong> velocity, by contrast, varies
+          directly with a tissue property
+          called the <strong style="color: var(--accent-amber);">shear modulus (μ)</strong>, a measure of resistance to
+          sideways deformation (<a href="module3-3.html">see
+            <u>Module 3-3</u></a>). Stiffer tissue produces faster shear waves; softer tissue produces slower ones.
+          Pathological
           processes such as fibrosis and hypertrophy remodel the tissue's composition and microstructure, producing a
           substantially higher shear modulus than healthy myocardium, and therefore faster shear waves. In soft
           biological tissues, shear wave velocity typically ranges from about 1 to 10 m/s.</p>
@@ -162,7 +185,8 @@
               </div>
               <canvas class="wave-canvas" id="compCanvas" role="img"
                 aria-label="Animated compressional wave: the same dot grid as the shear wave below, but each column shifts left-right in place, parallel to the direction of travel, creating moving bands of compression and rarefaction that travel in the direction of propagation."></canvas>
-              <p class="wave-canvas-caption">Same dot grid as below. Each column shifts <strong>left–right</strong> — the compressed/spread pattern travels in the direction of propagation.</p>
+              <p class="wave-canvas-caption">Same dot grid as below. Each column shifts <strong>left–right</strong> —
+                the compressed/spread pattern travels in the direction of propagation.</p>
             </div>
 
             <div class="wave-row" data-wave="shear">
@@ -176,11 +200,13 @@
               </div>
               <canvas class="wave-canvas" id="shearCanvas" role="img"
                 aria-label="Animated shear wave: the same dot grid as the compressional wave above, but each column shifts up and down together, perpendicular to the direction of travel, so the grid undulates into a traveling wavy ribbon that moves in the direction of propagation."></canvas>
-              <p class="wave-canvas-caption">Same dot grid as above. Each column shifts <strong>up–down</strong> — only the wavy shape travels in the direction of propagation.</p>
+              <p class="wave-canvas-caption">Same dot grid as above. Each column shifts <strong>up–down</strong> — only
+                the wavy shape travels in the direction of propagation.</p>
             </div>
 
             <div class="wave-controls">
-              <button class="icon-btn wave-play-toggle" id="wavePlayToggle" type="button" aria-label="Pause animation">❙❙</button>
+              <button class="icon-btn wave-play-toggle" id="wavePlayToggle" type="button"
+                aria-label="Pause animation">❙❙</button>
               <div class="wave-slider-group">
                 <div class="wave-slider-labels">
                   <span>Myocardial stiffness</span>
@@ -203,10 +229,14 @@
 
         <div class="callout">
           <p class="callout-label">Summary</p>
-          <p class="callout-text">Mechanical waves can be <strong style="color: var(--accent-violet);">compressional</strong> or <strong style="color: var(--accent);">shear</strong>, depending on how particles move
+          <p class="callout-text">Mechanical waves can be <strong
+              style="color: var(--accent-violet);">compressional</strong> or <strong
+              style="color: var(--accent);">shear</strong>, depending on how particles move
             relative to the direction of propagation. In soft biological tissues, compressional wave velocity is
-            <strong>insensitive</strong> to tissue mechanical state, whereas shear wave velocity is governed by the <strong style="color: var(--accent-amber)">shear modulus (μ)</strong>.
-            This asymmetry is the physical basis of SWE.</p>
+            <strong>insensitive</strong> to tissue mechanical state, whereas shear wave velocity is governed by the
+            <strong style="color: var(--accent-amber)">shear modulus (μ)</strong>.
+            This asymmetry is the physical basis of SWE.
+          </p>
         </div>
 
         <div class="section-nav">
@@ -218,7 +248,8 @@
     </main>
 
     <aside class="ref-panel" id="refPanel">
-      <button class="icon-btn ref-toggle" id="refToggle" aria-label="Toggle reference panel" data-tooltip="Equations, Glossary &amp; Sources">‹</button>
+      <button class="icon-btn ref-toggle" id="refToggle" aria-label="Toggle reference panel"
+        data-tooltip="Equations, Glossary &amp; Sources">‹</button>
       <div class="ref-tabs">
         <button class="ref-tab active" data-tab="equations">Equations</button>
         <button class="ref-tab" data-tab="glossary">Glossary</button>
@@ -269,7 +300,46 @@
         </div>
       </div>
       <div class="ref-panel-content" data-panel="sources" hidden>
-        <p class="sources-note">Source citations for this section will be added here.</p>
+        <div class="source-item">
+          <p class="source-citation">Cikes M, D'hooge J, Solomon SD. <a class="source-title-link"
+              href="https://doi.org/10.1016/B978-0-323-39226-6.00001-1" target="_blank"
+              rel="noopener noreferrer">Physical principles of ultrasound and generation of images.</a> In:
+            <em>Essential Echocardiography: A Companion to Braunwald's Heart Disease</em>. Elsevier; 2019:chap 1. <a
+              class="source-doi-link" href="https://doi.org/10.1016/B978-0-323-39226-6.00001-1" target="_blank"
+              rel="noopener noreferrer">doi:10.1016/B978-0-323-39226-6.00001-1</a></p>
+          <p class="source-note">Supports the B-mode imaging description (pulse-echo principle, compressional-wave
+            basis).</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Martin K, Ramnarine K. <a class="source-title-link"
+              href="https://doi.org/10.1017/CBO9780511750885.004" target="_blank" rel="noopener noreferrer">Physics.</a>
+            In: Hoskins PR, Martin K, Thrush A, eds. <em>Diagnostic Ultrasound: Physics and Equipment</em>. 2nd ed.
+            Cambridge University Press; 2010:chap 2. <a class="source-doi-link"
+              href="https://doi.org/10.1017/CBO9780511750885.004" target="_blank"
+              rel="noopener noreferrer">doi:10.1017/CBO9780511750885.004</a></p>
+          <p class="source-note">Supports the transverse/longitudinal (shear/compressional) wave distinction, using the
+            same water-wave analogy as this section.</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Szabo TL. <a class="source-title-link"
+              href="https://doi.org/10.1016/B978-0-12-396487-8.00016-1" target="_blank"
+              rel="noopener noreferrer">Elastography.</a> In: <em>Diagnostic Ultrasound Imaging: Inside Out</em>.
+            Elsevier; 2014:699-734. <a class="source-doi-link" href="https://doi.org/10.1016/B978-0-12-396487-8.00016-1"
+              target="_blank" rel="noopener noreferrer">doi:10.1016/B978-0-12-396487-8.00016-1</a></p>
+          <p class="source-note">Supports the compressional vs. shear particle-motion distinction and why shear waves
+            cannot travel through liquids.</p>
+        </div>
+        <div class="source-item">
+          <p class="source-citation">Villalobos Lizardi JC, Baranger J, Nguyen MB, et al. <a class="source-title-link"
+              href="https://doi.org/10.1038/s44161-021-00007-3" target="_blank" rel="noopener noreferrer">A guide for
+              assessment of myocardial stiffness in health and disease.</a> <em>Nat Cardiovasc Res</em>. 2022;1(1):8-22.
+            <a class="source-doi-link" href="https://doi.org/10.1038/s44161-021-00007-3" target="_blank"
+              rel="noopener noreferrer">doi:10.1038/s44161-021-00007-3</a></p>
+          <p class="source-note">Box 2 supports the shear modulus (&mu;) definition and why shear wave velocity, not
+            compressional, carries stiffness information.</p>
+        </div>
+
+
       </div>
     </aside>
 
