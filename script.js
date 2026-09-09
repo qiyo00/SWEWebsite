@@ -13,11 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     stageId: 'valveStage', dotGroupId: 'aorticDotGroup', dotId: 'aorticDot', waveId: 'aorticWavePath',
     hitAreaId: 'aorticHitArea', playBtnId: 'aorticPlayBtn', resetBtnId: 'aorticResetBtn',
     drawDuration: 2300, // path now runs well past the visible frame (clipped) - was 1100 for the shorter, pre-extension path
+    morphTargets: AORTIC_MORPH_TARGETS, labelId: 'aorticLabel',
   });
   initValveInteractive({
     stageId: 'valveStage', dotGroupId: 'mitralDotGroup', dotId: 'mitralDot', waveId: 'mitralWavePath',
     hitAreaId: 'mitralHitArea', playBtnId: 'mitralPlayBtn', resetBtnId: 'mitralResetBtn',
     drawDuration: 2300,
+    morphTargets: MITRAL_MORPH_TARGETS, labelId: 'mitralLabel',
   });
   initDispersionInteractive();
   initGuidedWaveInteractive();
@@ -367,6 +369,7 @@ function initWaveTypesInteractive() {
   const stiffnessLabel = document.getElementById('stiffnessValueLabel');
   const shearSpeedReadout = document.getElementById('shearSpeedReadout');
   const playToggle = document.getElementById('wavePlayToggle');
+  const resetBtn = document.getElementById('waveResetBtn');
   if (!compCanvas || !shearCanvas || !slider || !playToggle) return;
 
   const compCtx = compCanvas.getContext('2d');
@@ -389,13 +392,29 @@ function initWaveTypesInteractive() {
   const COMP_SPEED = 240; // px/s, fixed — visually faster than any shear speed
   const SHEAR_SPEED_MIN = 30; // px/s, at slider = 0
   const SHEAR_SPEED_MAX = 150; // px/s, at slider = 100
-  const SHEAR_MS_MIN = 1; // m/s label at slider = 0
-  const SHEAR_MS_MAX = 10; // m/s label at slider = 100
+  const SHEAR_MS_MIN = 0.8; // m/s label at slider = 0 — pediatric myocardium range, not generic soft tissue
+  const SHEAR_MS_MAX = 3.0; // m/s label at slider = 100
+
+  // Both waves render as a single repeating *finite* wave packet rather
+  // than a steady-state field, so propagation direction is actually
+  // visible: ahead of the packet the medium is at rest, a leading edge
+  // sweeps left→right, particles spring into motion behind it and
+  // settle back to rest behind its trailing edge, and once the whole
+  // packet clears the right edge it re-emerges from the left.
+  const PACKET_LEN_COMP = WAVELENGTH * 2.5;
+  const PACKET_LEN_SHEAR = WAVELENGTH_SHEAR * 2.5;
+  // Soft-edge width, ~half a wavelength, so particles ease into and out
+  // of motion at both edges instead of snapping.
+  const RAMP_COMP = WAVELENGTH * 0.5;
+  const RAMP_SHEAR = WAVELENGTH_SHEAR * 0.5;
 
   let compSize = { width: 0, height: 0 };
   let shearSize = { width: 0, height: 0 };
-  let compPhase = 0;
-  let shearPhase = 0;
+  // Leading-edge position (px) of each packet — also doubles as the
+  // phase reference for its waveform, so the sine pattern travels with
+  // the packet instead of the medium oscillating in place forever.
+  let compFront = -RAMP_COMP; // px — starts off-screen left, packet at rest
+  let shearFront = -RAMP_SHEAR;
   let shearSpeedPx = SHEAR_SPEED_MIN;
   let playing = true;
   let lastT = null;
@@ -418,9 +437,20 @@ function initWaveTypesInteractive() {
     render();
   }
 
-  function drawCompressional(width, height, phase) {
+  function drawWavefront(ctx, front, width, topY, bottomY, color) {
+    if (front < 0 || front > width) return;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(front, topY);
+    ctx.lineTo(front, bottomY);
+    ctx.stroke();
+  }
+
+  function drawCompressional(width, height, front) {
     compCtx.clearRect(0, 0, width, height);
     if (width <= 1) return;
+    const back = front - PACKET_LEN_COMP; // trailing edge
     const marginY = height * 0.18;
     const spacingY = ROWS > 1 ? (height - marginY * 2) / (ROWS - 1) : 0;
     const cols = Math.ceil(width / GRID_SPACING_X) + 4;
@@ -429,20 +459,25 @@ function initWaveTypesInteractive() {
       const y = marginY + r * spacingY;
       for (let c = -2; c < cols; c++) {
         const x0 = c * GRID_SPACING_X;
-        const x = x0 + AMPLITUDE_COMP * Math.sin(K * x0 - phase);
+        const lead = Math.min(1, Math.max(0, (front - x0) / RAMP_COMP));
+        const trail = Math.min(1, Math.max(0, (x0 - back) / RAMP_COMP));
+        const gate = lead * trail;
+        const x = x0 + AMPLITUDE_COMP * Math.sin(K * x0 - K * front) * gate;
         if (x < -6 || x > width + 6) continue;
         compCtx.beginPath();
         compCtx.arc(x, y, 2.5, 0, Math.PI * 2);
         compCtx.fill();
       }
     }
+    drawWavefront(compCtx, front, width, marginY - 10, marginY + (ROWS - 1) * spacingY + 10, 'rgba(83, 74, 183, 0.9)');
   }
 
-  function drawShear(width, height, phase) {
+  function drawShear(width, height, front) {
     shearCtx.clearRect(0, 0, width, height);
     if (width <= 1) return;
     // Same grid geometry as drawCompressional (same ROWS, same margin
     // formula, same column spacing) — only the displacement axis differs.
+    const back = front - PACKET_LEN_SHEAR; // trailing edge
     const marginY = height * 0.18;
     const spacingY = ROWS > 1 ? (height - marginY * 2) / (ROWS - 1) : 0;
     const cols = Math.ceil(width / GRID_SPACING_X) + 4;
@@ -450,7 +485,10 @@ function initWaveTypesInteractive() {
     for (let c = -2; c < cols; c++) {
       const x0 = c * GRID_SPACING_X;
       if (x0 < -6 || x0 > width + 6) continue;
-      const dy = AMPLITUDE_SHEAR * Math.sin(K_SHEAR * x0 - phase);
+      const lead = Math.min(1, Math.max(0, (front - x0) / RAMP_SHEAR));
+      const trail = Math.min(1, Math.max(0, (x0 - back) / RAMP_SHEAR));
+      const gate = lead * trail;
+      const dy = AMPLITUDE_SHEAR * Math.sin(K_SHEAR * x0 - K_SHEAR * front) * gate;
       for (let r = 0; r < ROWS; r++) {
         const yRest = marginY + r * spacingY;
         shearCtx.beginPath();
@@ -458,23 +496,26 @@ function initWaveTypesInteractive() {
         shearCtx.fill();
       }
     }
+    drawWavefront(shearCtx, front, width, marginY - 10, marginY + (ROWS - 1) * spacingY + 10, 'rgba(15, 110, 86, 0.9)');
   }
 
   function render() {
-    drawCompressional(compSize.width, compSize.height, compPhase);
-    drawShear(shearSize.width, shearSize.height, shearPhase);
+    drawCompressional(compSize.width, compSize.height, compFront);
+    drawShear(shearSize.width, shearSize.height, shearFront);
   }
 
-  // Deliberately plain material-stiffness language, not clinical
-  // terms like "healthy" or "fibrosis" — this panel's only job is
-  // stiffer material → faster shear wave. Pathology is covered
-  // elsewhere in the module. The level also drives the label's color
-  // (see #stiffnessValueLabel[data-level] in style.css).
-  const STIFFNESS_LABELS = { soft: 'Soft', medium: 'Medium', stiff: 'Stiff' };
+  // Bands correspond to real pediatric myocardial shear-wave velocity
+  // (see the .wave-note paragraph in module3-1.html for the source
+  // values): soft 0.8-1.8 m/s, borderline 1.8-2.5 m/s, stiff >2.5 m/s.
+  // The slider is 0-100 mapped linearly to SHEAR_MS_MIN-SHEAR_MS_MAX
+  // (0.8-3.0 m/s), so those cut-offs become slider positions ~45 and
+  // ~77. The level also drives the label's color (see
+  // #stiffnessValueLabel[data-level] in style.css).
+  const STIFFNESS_LABELS = { soft: 'Soft', borderline: 'Borderline', stiff: 'Stiff' };
 
   function stiffnessLevel(v) {
-    if (v < 33) return 'soft';
-    if (v < 67) return 'medium';
+    if (v < 45) return 'soft';
+    if (v < 77) return 'borderline';
     return 'stiff';
   }
 
@@ -492,8 +533,20 @@ function initWaveTypesInteractive() {
     if (lastT === null) lastT = t;
     const dt = Math.min((t - lastT) / 1000, 0.05);
     lastT = t;
-    compPhase += COMP_SPEED * dt * K;
-    shearPhase += shearSpeedPx * dt * K_SHEAR;
+    compFront += COMP_SPEED * dt;
+    shearFront += shearSpeedPx * dt;
+    // Independent resets: once a packet's trailing edge has fully
+    // cleared its own canvas' right edge (plus one ramp of buffer),
+    // snap its front back off-screen left so it re-emerges cleanly.
+    // Both edges ramp softly and the reset only happens once the whole
+    // packet is off-screen, so there's no visible jump. Compressional
+    // and shear run at different speeds, so they cycle independently.
+    if (compFront - PACKET_LEN_COMP > compSize.width + RAMP_COMP) {
+      compFront = -RAMP_COMP;
+    }
+    if (shearFront - PACKET_LEN_SHEAR > shearSize.width + RAMP_SHEAR) {
+      shearFront = -RAMP_SHEAR;
+    }
     render();
     if (playing) rafId = requestAnimationFrame(loop);
   }
@@ -510,8 +563,18 @@ function initWaveTypesInteractive() {
     }
   }
 
+  function resetWaves() {
+    // Restart both packets off-screen left, at rest, exactly like the
+    // startup state.
+    compFront = -RAMP_COMP;
+    shearFront = -RAMP_SHEAR;
+    lastT = null; // avoid a huge dt on the next animation frame
+    render();
+  }
+
   slider.addEventListener('input', updateFromSlider);
   playToggle.addEventListener('click', () => setPlaying(!playing));
+  if (resetBtn) resetBtn.addEventListener('click', resetWaves);
 
   // ResizeObserver (not a window 'resize' listener) so the canvases
   // re-buffer whenever their own box size changes for any reason —
@@ -525,36 +588,73 @@ function initWaveTypesInteractive() {
 
   updateFromSlider();
   resize();
-  setPlaying(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) {
+    // Static illustration: park each front partway across so the
+    // packet and its wavefront line are visible at rest, rather than
+    // showing an empty (or fully-settled) canvas.
+    compFront = compSize.width * 0.55;
+    shearFront = shearSize.width * 0.55;
+    render();
+  }
+  setPlaying(!reducedMotion);
 }
 
 /* ---------- Module 3-2: ARF Push Pulse Interactive ----------
-   Sequenced reveal (see matching keyframes/delays in style.css):
-   beam clips in top-to-bottom -> focal zone fades/scales in -> the
-   displacement dot pops -> a shear-wave pulse fires.
-   Each arm (left/right) is exactly one persistent <path>, never
-   cloned or replaced — see .shear-arm-path in the SVG markup, clipped
-   to the tissue rect so a hump disappears as it crosses the tissue
-   edge rather than traveling on visibly past the medium. Every pulse
-   just pushes a { start } timestamp onto that arm's own list; one
-   shared rAF loop rebuilds each arm's 'd' attribute every frame by
-   concatenating one hump-shaped subpath per still-active pulse on
-   that arm (SVG allows multiple "M...C...C..." subpaths in one 'd').
-   So several clicks in flight show as multiple humps traveling
-   together on the SAME line, not as separate lines stacking up. The
-   same routine fires once automatically after the intro sequence and
-   again on every click ("poke"). */
+   The whole reveal sequence is one scrubbable timeline, driven by a
+   single progress value (mainT, ms) that the play loop, the scrubber
+   (#arfScrubber), and the keyframe markers (#arfMarks) all read and
+   write — see render() below, the one function that sets every
+   layer's on-screen state from mainT alone, called from every
+   trigger so none of them can ever disagree about what a given mainT
+   looks like. Timeline (ported from what used to be CSS @keyframes +
+   animation-delay, back when this only ever autoplayed once):
+     0.00–1.10s  beam clips in top-to-bottom
+     1.05–1.55s  focal zone fades/scales in
+     1.15–1.55s  "ARF" label fades in
+     1.50–1.95s  displacement dot pops in (overshoot)
+     1.55–1.95s  "Focal zone" label fades in
+     1.95–4.95s  shear-wave pulse travels from the dot to the tissue
+                 edge — the only part with any motion left once the
+                 idle (mainT = 0) state — probe/tissue only, per
+                 style.css's base (hidden) rules for the SVG layers
+                 above — has been left.
+   Two kinds of shear-wave pulse are drawn, both by buildArmD():
+   - the MAIN pulse: position is a pure function of mainT, per above.
+   - "extra" pulses, fired by clicking the tissue once the dot has
+     fully appeared (mainT >= SHEAR_START): each carries its own
+     real-time { start } timestamp, exactly like the original
+     click-to-replay design — additive ripples layered on top of
+     whatever the main pulse is currently showing, not tied to the
+     scrubber (there's no one "position" to scrub to when several may
+     be in flight at once).
+   Every render, both kinds are threaded into ONE line per arm in
+   position order (older pulses further along, since they all move at
+   the same rate), each joined by a flat segment — drawing each pulse
+   as its own separate dot-to-edge subpath (an earlier version of
+   this) meant a newer pulse's flat trailing segment cut straight
+   across an older pulse's still-visible hump, and the two overlapping
+   strokes read as a closed lens shape between them. One thread, one
+   line, no matter how many pulses are in flight. */
 function initArfInteractive() {
-  const stage = document.getElementById('arfStage');
   const svg = document.getElementById('arfSvg');
+  const beamRect = document.getElementById('arfBeamRevealRect');
+  const focalZone = document.getElementById('focalZone');
   const dotEl = document.getElementById('dot');
   const hitArea = document.getElementById('arfHitArea');
   const playBtn = document.getElementById('arfPlayBtn');
   const resetBtn = document.getElementById('arfResetBtn');
-  const labelShear = svg ? svg.querySelector('.arf-label-shear') : null;
+  const scrubber = document.getElementById('arfScrubber');
+  const thumbEl = document.getElementById('arfThumb');
+  const marksEl = document.getElementById('arfMarks');
+  const mark5 = document.getElementById('arfMark5');
+  const labelBeam = svg ? svg.querySelector('.arf-label-group.arf-label-beam') : null;
+  const labelFocal = svg ? svg.querySelector('.arf-label-group.arf-label-focal') : null;
+  const labelShear = svg ? svg.querySelector('.arf-label-group.arf-label-shear') : null;
   const leftPath = svg ? svg.querySelector('.shear-arm-path[data-arm="left"]') : null;
   const rightPath = svg ? svg.querySelector('.shear-arm-path[data-arm="right"]') : null;
-  if (!stage || !svg || !dotEl || !hitArea || !playBtn || !resetBtn || !labelShear || !leftPath || !rightPath) return;
+  if (!svg || !beamRect || !focalZone || !dotEl || !hitArea || !playBtn || !resetBtn || !scrubber || !thumbEl ||
+      !marksEl || !mark5 || !labelBeam || !labelFocal || !labelShear || !leftPath || !rightPath) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -566,19 +666,67 @@ function initArfInteractive() {
   const HALF_WIDTH = 89.043;
   const DIP = 60;
   const CTRL = 44.521;
-  const PULSE_DURATION = 3000; // ms, dot -> travelX
+  const BEAM_FULL_HEIGHT = 1080.83;
+
+  // Timeline constants — see the header comment above for the
+  // sequence these came from. Marker left-offsets in the HTML
+  // (#arfMarks) are precomputed from these against TOTAL_DURATION.
+  const BEAM_START = 0, BEAM_DUR = 1100;
+  const FOCAL_START = 1050, FOCAL_DUR = 500;
+  const BEAM_LABEL_START = 1150, BEAM_LABEL_DUR = 400;
+  const DOT_START = 1500, DOT_DUR = 450;
+  const FOCAL_LABEL_START = 1550, FOCAL_LABEL_DUR = 400;
+  const SHEAR_START = DOT_START + DOT_DUR; // 1950
+  const SHEAR_DUR = 3000;
+  const TOTAL_DURATION = SHEAR_START + SHEAR_DUR; // 4950 — the scrubber's max
+  // Reduced motion: one illustrative "wave underway" frame rather
+  // than the fully-traveled end (which the #shearWave clip-path would
+  // hide entirely, since travelX is deliberately past the tissue edge).
+  const REDUCED_MOTION_T = SHEAR_START + SHEAR_DUR * 0.5;
 
   // travelX only needs to clear the tissue edge by enough that the whole
   // hump (not just its center) is past it before cleanup — the
   // #shearWave clip-path (matching the tissue rect) does the actual
   // hiding, so there's no need to travel all the way off the canvas.
   const arms = [
-    { dir: -1, edgeX: 556.814, travelX: 250, path: leftPath, pulses: [] },
-    { dir: 1, edgeX: 1995.824, travelX: 2300, path: rightPath, pulses: [] },
+    { dir: -1, edgeX: 556.814, travelX: 250, path: leftPath, extraPulses: [] },
+    { dir: 1, edgeX: 1995.824, travelX: 2300, path: rightPath, extraPulses: [] },
   ];
 
-  let canPulse = false;
+  let mainT = 0;        // scrubbable progress, ms, 0..TOTAL_DURATION
+  let playing = false;
   let loopRunning = false;
+  let lastFrameTs = null;
+
+  // Standard Newton-Raphson cubic-bezier solver (the same math
+  // browsers use internally for animation-timing-function), so the
+  // JS-driven layers below move exactly like they used to as CSS
+  // @keyframes with these same bezier values.
+  function cubicBezier(x1, y1, x2, y2) {
+    const A = (a1, a2) => 1 - 3 * a2 + 3 * a1;
+    const B = (a1, a2) => 3 * a2 - 6 * a1;
+    const C = (a1) => 3 * a1;
+    const calc = (t, a1, a2) => ((A(a1, a2) * t + B(a1, a2)) * t + C(a1)) * t;
+    const slope = (t, a1, a2) => 3 * A(a1, a2) * t * t + 2 * B(a1, a2) * t + C(a1);
+    return function (x) {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      let t = x;
+      for (let i = 0; i < 8; i++) {
+        const s = slope(t, x1, x2);
+        if (s === 0) break;
+        t -= (calc(t, x1, x2) - x) / s;
+      }
+      return calc(t, y1, y2);
+    };
+  }
+  const EASE_STANDARD = cubicBezier(0.4, 0, 0.2, 1); // was the beam's cubic-bezier(0.4,0,0.2,1)
+  const EASE_OUT = cubicBezier(0, 0, 0.58, 1);        // CSS's "ease-out"
+  const EASE_POP = cubicBezier(0.34, 1.56, 0.64, 1);  // the dot's overshoot bounce
+
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function segment(t, start, dur) { return clamp01((t - start) / dur); }
+  function lerp(a, b, p) { return a + (b - a) * p; }
 
   // One hump's worth of path commands (no leading M, no trailing flat
   // segment) — the piece buildArmD() threads together, in position order,
@@ -596,22 +744,12 @@ function initArfInteractive() {
     };
   }
 
-  // Builds ONE connected line per arm — every currently-active pulse on
-  // that arm is a hump threaded into the same path in position order
-  // (older pulses always further along, since they all move at the same
-  // rate — see runPulse), each joined to the next by a single flat
-  // segment. This is deliberate: drawing each pulse as its own separate
-  // dot-to-edge subpath (an earlier version of this) meant a newer
-  // pulse's flat trailing segment cut straight across an older pulse's
-  // still-visible hump, and the two overlapping strokes read as a closed
-  // lens shape between them. One thread, one line, no matter how many
-  // pulses are in flight.
   function buildArmD(arm, humpCenters) {
     let d = `M${DOT_X},${BASE_Y}`;
     let cursorX = DOT_X;
     humpCenters.forEach((hc) => {
       let enterX = hc - arm.dir * HALF_WIDTH;
-      // Guard against near-simultaneous clicks producing near-identical
+      // Guard against near-simultaneous pulses producing near-identical
       // positions: never let a hump start behind where the line already is.
       if ((enterX - cursorX) * arm.dir < 0) enterX = cursorX;
       if (enterX !== cursorX) d += `L${enterX},${BASE_Y}`;
@@ -623,115 +761,337 @@ function initArfInteractive() {
     return d;
   }
 
-  function showShearLabel() {
-    labelShear.style.transition = 'opacity 0.4s ease-out';
-    labelShear.style.opacity = '1';
+  function humpCenterForProgress(arm, p) {
+    const hcStart = DOT_X + arm.dir * HALF_WIDTH;
+    const hcEnd = arm.travelX - arm.dir * HALF_WIDTH;
+    return hcStart + p * (hcEnd - hcStart);
   }
 
-  function hideShearLabel() {
-    labelShear.style.transition = '';
-    labelShear.style.opacity = '0';
+  function anyExtraPulsesActive() {
+    return arms.some((arm) => arm.extraPulses.length > 0);
   }
 
-  function tick(now) {
-    let anyActive = false;
-    arms.forEach((arm) => {
-      arm.pulses = arm.pulses.filter((pulse) => (now - pulse.start) / PULSE_DURATION < 1);
-      if (arm.pulses.length === 0) {
-        arm.path.setAttribute('d', '');
-        return;
+  // The one function that sets every layer's on-screen state from
+  // mainT (t) — called from the play loop, the scrubber's input
+  // handler, marker clicks, reset, and click-fired extra pulses
+  // alike. instant=true skips the shear label's fade transition
+  // (used while dragging/seeking, where an animated transition would
+  // just lag behind the pointer); the fade is reserved for the play
+  // loop's own per-frame crossing of the threshold.
+  function render(t, now, instant) {
+    const beamP = EASE_STANDARD(segment(t, BEAM_START, BEAM_DUR));
+    beamRect.style.height = `${beamP * BEAM_FULL_HEIGHT}px`;
+
+    const focalP = EASE_OUT(segment(t, FOCAL_START, FOCAL_DUR));
+    focalZone.style.opacity = String(focalP);
+    focalZone.style.transform = `scale(${lerp(0.55, 1, focalP)})`;
+
+    labelBeam.style.opacity = String(EASE_OUT(segment(t, BEAM_LABEL_START, BEAM_LABEL_DUR)));
+    labelFocal.style.opacity = String(EASE_OUT(segment(t, FOCAL_LABEL_START, FOCAL_LABEL_DUR)));
+
+    // Dot pop: a two-segment keyframe (0% -> 70% overshoot -> 100%
+    // settle), same as the removed arfDotPop @keyframes block.
+    let dotOpacity = 0, dotScale = 0;
+    if (t >= DOT_START) {
+      const local = segment(t, DOT_START, DOT_DUR);
+      if (local < 0.7) {
+        const p = EASE_POP(local / 0.7);
+        dotOpacity = p;
+        dotScale = lerp(0, 1.25, p);
+      } else {
+        const p = EASE_POP((local - 0.7) / 0.3);
+        dotOpacity = 1;
+        dotScale = lerp(1.25, 1, p);
       }
-      anyActive = true;
-      const hcStart = DOT_X + arm.dir * HALF_WIDTH;
-      const hcEnd = arm.travelX - arm.dir * HALF_WIDTH;
-      const humpCenters = arm.pulses
-        .map((pulse) => {
-          const p = Math.min((now - pulse.start) / PULSE_DURATION, 1);
-          return hcStart + p * (hcEnd - hcStart);
-        })
-        .sort((a, b) => (a - DOT_X) * arm.dir - (b - DOT_X) * arm.dir);
-      arm.path.setAttribute('d', buildArmD(arm, humpCenters));
-    });
-    if (anyActive) {
-      requestAnimationFrame(tick);
-    } else {
-      loopRunning = false;
     }
+    dotEl.style.opacity = String(dotOpacity);
+    dotEl.style.transform = `scale(${dotScale})`;
+
+    labelShear.style.transition = instant ? '' : 'opacity 0.4s ease-out';
+    labelShear.style.opacity = t >= SHEAR_START ? '1' : '0';
+
+    const shearP = clamp01((t - SHEAR_START) / SHEAR_DUR);
+    arms.forEach((arm) => {
+      arm.extraPulses = arm.extraPulses.filter((p) => (now - p.start) / SHEAR_DUR < 1);
+      const centers = [];
+      if (shearP > 0) centers.push(humpCenterForProgress(arm, Math.min(shearP, 1)));
+      arm.extraPulses.forEach((p) => {
+        centers.push(humpCenterForProgress(arm, Math.min((now - p.start) / SHEAR_DUR, 1)));
+      });
+      centers.sort((a, b) => (a - DOT_X) * arm.dir - (b - DOT_X) * arm.dir);
+      arm.path.setAttribute('d', centers.length ? buildArmD(arm, centers) : '');
+    });
   }
 
-  function ensureLoop() {
-    if (loopRunning) return;
-    loopRunning = true;
-    requestAnimationFrame(tick);
-  }
-
-  function runPulse() {
-    showShearLabel();
+  function bounceDot() {
     if (dotEl.animate) {
       dotEl.animate(
         [{ transform: 'scale(1)' }, { transform: 'scale(1.45)' }, { transform: 'scale(1)' }],
         { duration: 450, easing: 'ease-out' }
       );
     }
-    const start = performance.now();
-    arms.forEach((arm) => arm.pulses.push({ start }));
-    ensureLoop();
   }
 
-  function clearPulses() {
-    arms.forEach((arm) => {
-      arm.pulses = [];
-      arm.path.setAttribute('d', '');
-    });
-    loopRunning = false;
+  // Keeps the native <input> (an invisible hit-layer now — see the
+  // style.css comment above .arf-track-line for why) and the custom
+  // visual thumb (#arfThumb, purely decorative, pointer-events:none)
+  // in sync with mainT — the one thing that actually moves visibly,
+  // since the real thumb is hidden.
+  function syncScrubber(t) {
+    scrubber.value = String(Math.round(t));
+    thumbEl.style.left = `${(t / TOTAL_DURATION) * 100}%`;
   }
 
-  function showStaticShearFrame() {
-    // Reduced motion: one illustrative frame, parked at the tissue edge.
-    arms.forEach((arm) => {
-      const hc = arm.edgeX - arm.dir * HALF_WIDTH;
-      arm.path.setAttribute('d', buildArmD(arm, [hc]));
-    });
-    showShearLabel();
+  function ensureLoop() {
+    if (loopRunning) return;
+    loopRunning = true;
+    lastFrameTs = null;
+    requestAnimationFrame(loop);
   }
 
-  function playSequence() {
-    canPulse = false;
-    clearPulses();
-    hideShearLabel();
-    stage.classList.remove('playing', 'no-motion');
-    void stage.offsetWidth; // force reflow so the restarted CSS animations actually replay
-    if (reduceMotion) {
-      stage.classList.add('no-motion', 'playing');
-      showStaticShearFrame();
-    } else {
-      stage.classList.add('playing');
+  function loop(ts) {
+    if (lastFrameTs === null) lastFrameTs = ts;
+    const dt = ts - lastFrameTs;
+    lastFrameTs = ts;
+    if (playing) {
+      mainT = Math.min(mainT + dt, TOTAL_DURATION);
+      syncScrubber(mainT);
+      if (mainT >= TOTAL_DURATION) setPlaying(false);
     }
+    render(mainT, performance.now(), false);
+    if (playing || anyExtraPulsesActive()) {
+      requestAnimationFrame(loop);
+    } else {
+      loopRunning = false;
+    }
+  }
+
+  function setPlaying(p) {
+    playing = p;
+    playBtn.textContent = playing ? '❚❚' : '▶';
+    playBtn.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+    playBtn.setAttribute('aria-pressed', String(playing));
+    if (playing) ensureLoop();
+  }
+
+  // Play button toggles: pause if already playing; otherwise start —
+  // resuming mid-way if paused there, or replaying from the top if it
+  // had already finished. (Missing this toggle — always trying to
+  // "start" regardless of current state — was why the button couldn't
+  // pause a running animation.)
+  function togglePlay() {
+    if (playing) {
+      setPlaying(false);
+      return;
+    }
+    if (mainT >= TOTAL_DURATION) mainT = 0; // replay from the start
+    if (reduceMotion) {
+      mainT = REDUCED_MOTION_T;
+      syncScrubber(mainT);
+      render(mainT, performance.now(), true);
+      return;
+    }
+    setPlaying(true);
+  }
+
+  function seekTo(t) {
+    setPlaying(false); // seeking pauses, same convention as the other sliders
+    mainT = t;
+    syncScrubber(mainT);
+    render(mainT, performance.now(), true);
   }
 
   function resetSequence() {
-    canPulse = false;
-    clearPulses();
-    hideShearLabel();
-    stage.classList.remove('playing', 'no-motion');
+    setPlaying(false);
+    mainT = 0;
+    syncScrubber(0);
+    arms.forEach((arm) => { arm.extraPulses = []; });
+    mark5.hidden = true;
+    render(0, performance.now(), true);
   }
 
-  dotEl.addEventListener('animationend', (e) => {
-    if (e.animationName === 'arfDotPop') {
-      canPulse = true;
-      runPulse();
-    }
-  });
-
   hitArea.addEventListener('click', () => {
-    if (!reduceMotion && canPulse) runPulse();
+    if (reduceMotion || mainT < SHEAR_START) return; // nothing to poke yet
+    const now = performance.now();
+    arms.forEach((arm) => arm.extraPulses.push({ start: now }));
+    bounceDot();
+    mark5.hidden = false;
+    render(mainT, now, false);
+    ensureLoop(); // keeps this extra pulse animating even if not "playing"
   });
 
-  playBtn.addEventListener('click', playSequence);
+  playBtn.addEventListener('click', togglePlay);
   resetBtn.addEventListener('click', resetSequence);
+  scrubber.addEventListener('input', () => seekTo(Number(scrubber.value)));
+  marksEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.arf-mark');
+    if (btn && !btn.hidden) seekTo(Number(btn.dataset.t));
+  });
 
-  playSequence();
+  // Idle on load: probe/tissue only (see style.css), scrubber at 0,
+  // no pulse fired yet — no autoplay.
+  syncScrubber(0);
+  render(0, performance.now(), true);
 }
+
+/* ---------- Module 3-2 path-morph engine (valve-closure phase transition) ----------
+   The two hearts in the valve interactive are two cardiac-cycle phases of
+   the SAME drawing (images/3-2-21.svg = diastole, left heart; 3-2-22.svg =
+   systole, right heart) — see script.js's initValveInteractive below for
+   how each heart's Play button uses this. This section only builds the
+   generic "tween a path's d from state A to state B" machinery; it knows
+   nothing about valves specifically.
+
+   Every pair it animates has the exact same sequence of path commands in
+   both states (after normalizing S-shorthand curves to explicit C, which
+   is a lossless rewrite — same curve, just spelled out), so each
+   anchor/control point tweens straight to its counterpart with no
+   resampling. That holds for the blood pools too because they take their
+   geometry from the wall's own cavity outlines — see the note above
+   AORTIC_MORPH_TARGETS. A resampling dependency (flubber) was carried
+   here while the pools still used the artwork's own mismatched fill
+   shapes; deriving them from the wall removed the need for it. */
+
+// Parses the restricted-but-sufficient path grammar this artwork uses
+// (M, L, C, S, Z — either case, with implicit command repetition) into a
+// normalized, ABSOLUTE-coordinate segment list. 'S' (smooth curveto) is
+// expanded into an equivalent explicit 'C' via the standard reflection
+// rule as it's parsed, so two paths that are the same curve but
+// serialized differently (one author's export using S shorthand, the
+// other spelling out C) normalize to the identical segment shape and can
+// be tweened point-for-point.
+function parsePathAbsolute(d) {
+  const tokens = d.match(/[MLCSZmlcsz]|-?\d*\.?\d+(?:e-?\d+)?/g) || [];
+  let i = 0, cur = [0, 0], startOfSubpath = [0, 0];
+  let prevCtrl = null; // reflection anchor for S -> C; null once a non-curve segment breaks the chain
+  let lastCmd = null;
+  const segs = [];
+  const argCounts = { M: 2, m: 2, L: 2, l: 2, C: 6, c: 6, S: 4, s: 4, Z: 0, z: 0 };
+  const isCmd = (t) => /^[MLCSZmlcsz]$/.test(t);
+  function readNums(n) {
+    const out = [];
+    for (let k = 0; k < n && i < tokens.length; k++) { out.push(parseFloat(tokens[i])); i++; }
+    return out;
+  }
+  while (i < tokens.length) {
+    let t;
+    if (isCmd(tokens[i])) { t = tokens[i]; i++; }
+    else { t = lastCmd === 'M' ? 'L' : lastCmd === 'm' ? 'l' : lastCmd; }
+    lastCmd = t;
+    const rel = t === t.toLowerCase() && t !== 'z';
+    const nums = readNums(argCounts[t] || 0);
+
+    if (t === 'M' || t === 'm') {
+      const p = rel ? [cur[0] + nums[0], cur[1] + nums[1]] : [nums[0], nums[1]];
+      cur = p; startOfSubpath = p; prevCtrl = null;
+      segs.push({ cmd: 'M', p: p.slice() });
+    } else if (t === 'L' || t === 'l') {
+      const p = rel ? [cur[0] + nums[0], cur[1] + nums[1]] : [nums[0], nums[1]];
+      cur = p; prevCtrl = null;
+      segs.push({ cmd: 'L', p: p.slice() });
+    } else if (t === 'C' || t === 'c') {
+      const c1 = rel ? [cur[0] + nums[0], cur[1] + nums[1]] : [nums[0], nums[1]];
+      const c2 = rel ? [cur[0] + nums[2], cur[1] + nums[3]] : [nums[2], nums[3]];
+      const end = rel ? [cur[0] + nums[4], cur[1] + nums[5]] : [nums[4], nums[5]];
+      segs.push({ cmd: 'C', p: [c1, c2, end] });
+      prevCtrl = c2; cur = end;
+    } else if (t === 'S' || t === 's') {
+      const c1 = prevCtrl ? [2 * cur[0] - prevCtrl[0], 2 * cur[1] - prevCtrl[1]] : cur.slice();
+      const c2 = rel ? [cur[0] + nums[0], cur[1] + nums[1]] : [nums[0], nums[1]];
+      const end = rel ? [cur[0] + nums[2], cur[1] + nums[3]] : [nums[2], nums[3]];
+      segs.push({ cmd: 'C', p: [c1, c2, end] });
+      prevCtrl = c2; cur = end;
+    } else if (t === 'Z' || t === 'z') {
+      segs.push({ cmd: 'Z', p: null });
+      cur = startOfSubpath; prevCtrl = null;
+    }
+  }
+  return segs;
+}
+
+function serializePathAbsolute(segs) {
+  const fmt = (n) => String(Math.round(n * 1000) / 1000);
+  let out = '';
+  for (const s of segs) {
+    if (s.cmd === 'M') out += `M${fmt(s.p[0])},${fmt(s.p[1])}`;
+    else if (s.cmd === 'L') out += `L${fmt(s.p[0])},${fmt(s.p[1])}`;
+    else if (s.cmd === 'C') out += `C${s.p.map((pt) => `${fmt(pt[0])},${fmt(pt[1])}`).join(' ')}`;
+    else if (s.cmd === 'Z') out += 'Z';
+  }
+  return out;
+}
+
+function lerpSegments(segsA, segsB, t) {
+  return segsA.map((a, i) => {
+    const b = segsB[i];
+    if (a.cmd !== b.cmd) {
+      throw new Error(`path structure mismatch at segment ${i}: ${a.cmd} vs ${b.cmd}`);
+    }
+    if (a.cmd === 'Z') return { cmd: 'Z', p: null };
+    if (a.cmd === 'C') {
+      return { cmd: 'C', p: [0, 1, 2].map((k) => [
+        a.p[k][0] + (b.p[k][0] - a.p[k][0]) * t,
+        a.p[k][1] + (b.p[k][1] - a.p[k][1]) * t,
+      ]) };
+    }
+    return { cmd: a.cmd, p: [a.p[0] + (b.p[0] - a.p[0]) * t, a.p[1] + (b.p[1] - a.p[1]) * t] };
+  });
+}
+
+// Builds a fast t => d function for two structurally-identical paths.
+// Parses both once; every later call is just a lerp + serialize.
+function makeDirectTween(dA, dB) {
+  const segsA = parsePathAbsolute(dA);
+  const segsB = parsePathAbsolute(dB);
+  if (segsA.length !== segsB.length) {
+    throw new Error(`makeDirectTween: segment count mismatch (${segsA.length} vs ${segsB.length}) — the two states must share a command structure`);
+  }
+  return (t) => serializePathAbsolute(lerpSegments(segsA, segsB, t));
+}
+
+function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+/* Per-heart list of {id, closedD} for every path that carries the phase
+   transition (ventricle wall + leaflet + the blood pools + the backing
+   layer). Direction: the shape authored on the element in the HTML is the
+   OPEN valve — that's the resting state you see before pressing Play, and
+   it's read live at init so the artwork on the page is always the source
+   of truth for it. 'closedD' is where that path animates TO: the same
+   structure, offset-corrected into this heart's on-page position (see the
+   module-3-2 pairing report: dx=-34.220,dy=+74.224 for a same-side
+   placement, and +-1078.473 in x on top of that to borrow the other
+   file's heart onto this one's spot).
+
+   Both blood pools (FillR = the blue chamber, FillBig = the pink chamber)
+   take their geometry from crossSection's OWN inner cavity subpaths in
+   both states, not from the artwork's separate fill shapes. In the
+   systole drawing those separate fills were authored as coarse
+   simplifications (38 numbers where the cavity wall has 182) that don't
+   follow the wall at all, which is what tore open mid-morph. Lining each
+   pool with the exact points of the wall it sits against makes the two
+   move as one — no seam can open between them by construction, so no
+   clip-path or per-pool backing shape is needed. Costs <=3.7px of drift
+   from the artist's original fill at the ends, which is invisible at any
+   render size this diagram is used at.
+
+   valveShearWave is intentionally not listed here — its geometry is
+   handled separately, once the wave trigger itself is wired up. */
+const AORTIC_MORPH_TARGETS = [
+  { id: 'aorticBacking', closedD: 'M926.413,861.824C896.483,787.714 849.203,760.644 849.203,760.644C850.823,744.274 852.566,712.671 825.757,668.628C804.361,633.478 752.508,618.029 698.608,617.945C644.708,617.861 592.906,650.054 571.806,679.679L584.36,689.782C572.506,678.648 559.586,671.82 537.948,669.011C513.944,665.895 499.076,674.564 499.076,674.564C474.182,704.053 458.842,752.654 458.842,752.654C446.702,762.294 436.018,811.997 428.182,804.274C409.459,785.82 364.993,768.735 335.162,773.204C314.863,776.245 288.437,804.969 282.693,844.416C275.167,896.097 269.292,1056.204 533.042,1168.035C796.802,1279.865 900.375,1251.457 936.158,1230.842C972.054,1210.161 992.66,1180.822 994.852,1121.315C998.097,1033.225 956.352,935.945 926.412,861.825Z' },
+  { id: 'aorticCrossSection', closedD: 'M926.413,861.824C896.483,787.714 849.203,760.644 849.203,760.644C850.823,744.274 852.566,712.671 825.757,668.628C804.361,633.478 752.508,618.029 698.608,617.945C644.708,617.861 592.906,650.054 571.806,679.679L584.36,689.782C572.506,678.648 559.586,671.82 537.948,669.011C513.944,665.895 499.076,674.564 499.076,674.564C474.182,704.053 458.842,752.654 458.842,752.654C446.702,762.294 436.018,811.997 428.182,804.274C409.459,785.82 364.993,768.735 335.162,773.204C314.863,776.245 288.437,804.969 282.693,844.416C275.167,896.097 269.292,1056.204 533.042,1168.035C796.802,1279.865 900.375,1251.457 936.158,1230.842C972.054,1210.161 992.66,1180.822 994.852,1121.315C998.097,1033.225 956.352,935.945 926.412,861.825ZM659.673,1182.324C492.183,1146.584 410.355,1075.609 390.273,1031.694C373.46,994.926 418.854,1005.495 444.131,1017.176C466.52,1027.523 483.574,1048.915 486.056,1047.202C489.548,1044.792 458.609,1006.67 407.444,997.663C353.748,988.211 371.237,1009.685 348.567,1006.414C325.897,1003.134 293.418,940.159 295.716,875.818C297.019,839.33 304.908,804.585 335.546,790.031C354.63,780.965 398.163,796.542 415.894,811.822C435.992,829.142 440.951,852.417 445.074,875.802C452.482,917.818 461.673,949.222 480.134,978.322C493.193,998.906 514.956,1014.777 517.078,1011.967C519.55,1008.693 494.61,999.265 478.269,964.031C463.81,932.854 459.794,909.902 455.684,874.673C451.584,839.433 449.784,788.073 467.914,768.183C467.914,768.183 486.312,785.436 503.929,779.18C519.003,773.828 522.767,742.217 519.386,745.958C516.386,749.277 513.123,771.134 501.376,772.669C487.206,774.52 471.312,764.946 472.142,749.563C473.55,723.454 492.185,695.244 504.44,680.691C504.44,680.691 523.366,668.454 553.078,678.585C585.198,689.536 588.887,707.117 588.887,707.117C588.887,707.117 568.865,772.7 560.565,781.623C551.674,791.18 533.419,801.393 523.717,786.712C514.764,773.165 532.56,752.954 530.044,751.244C526.853,749.074 513.289,770.902 515.61,784.053C517.358,793.96 525.95,800.776 537.121,802.287C546.699,803.582 553.735,799.883 556.375,796.013C556.375,796.013 548.225,937.483 621.695,1015.603C695.165,1093.733 800.598,1161.03 822.315,1171.093C871.908,1194.074 827.165,1218.063 659.675,1182.323ZM925.906,1137.777C911.98,1150.55 895.459,1146.394 860.417,1125.713C750.864,1053.761 703.601,1004.311 639.63,951.458C620.579,935.718 593.582,914.052 581.417,880.415C566.803,840.008 570.213,786.753 570.213,786.753C582.025,756.682 599.413,705.563 599.413,705.563C599.413,705.563 594.055,697.159 584.361,689.781C641.761,635.771 679.715,636.201 704.098,636.521C728.481,636.841 775.256,644.345 796.032,662.757C827.289,690.457 844.523,758.628 817.14,755.947C809.079,755.158 800.314,773.909 796.651,783.138C786.308,809.192 786.838,836.548 790.983,861.891C794.576,883.857 800.733,900.596 803.023,899.313C805.651,897.84 797.991,882.712 794.928,851.5C793.394,835.877 795.502,820.479 800.481,806.309C811.169,775.888 824.909,779.607 829.778,820.196C835.141,864.905 852.404,886.06 874.779,937.288C896.609,987.267 919.514,1027.143 930.502,1067.118C941.063,1105.535 938.081,1126.61 925.906,1137.778Z' },
+  { id: 'aorticLeaflet', closedD: 'M576.311,896.884C600.074,907.368 615.143,901.886 621.375,891.522C632.737,872.628 599.035,854.756 601.353,852.356C604.164,849.446 622.25,862.619 627.886,874.415C633.375,885.904 629.872,896.622 619.333,904.287C610.907,910.415 597.759,912.713 580.113,906.798C551.78,897.301 505.424,867.074 470.354,830.436C414.694,772.287 404.482,718.498 398.163,659.903C398.163,659.903 416.737,633.649 439.525,625.044C462.831,616.242 480.695,616.16 501.819,621.862C501.819,621.862 496.398,652.926 543.887,725.309C570.365,765.667 629.736,802.744 661.592,824.118C661.592,824.118 674.194,817.766 690.759,827.948C711.631,840.778 727.975,852.7 747.089,886.796C754.174,899.434 759.749,914.662 756.823,915.267C753.121,916.033 746.866,879.441 707.802,851.31C666.568,821.615 665.93,845.693 665.93,845.693C665.93,845.693 666.709,856.855 656.356,865.863C651.171,870.375 635.42,878.501 617.339,858.594C608.956,849.364 608.151,844.76 609.824,844.097C611.675,843.363 617.235,851.429 624.601,857.82C636.186,867.873 647.771,864.809 654.069,857.338C657.458,853.317 663.325,843.627 644.867,825.139C626.409,806.651 590.454,789.555 569.165,766.288C524.05,716.983 513.633,690.458 502.91,666.714C496.635,652.82 495.1,628.465 494.161,628.226C481.335,624.969 464.53,623.606 441.807,632.415C421.117,640.435 408.187,661.991 408.187,661.991C408.187,661.991 413.49,761.871 475.464,821.31C522.959,866.863 550.273,885.395 576.315,896.884Z' },
+  { id: 'aorticFillSmall', closedD: 'M401.417,662.692C409.752,649.555 434.162,629.947 445.077,626.501C455.992,623.054 485.534,621.706 492.183,624.203L502.028,630.764L569.868,755.628L591.566,817.224L562.268,850.543L453.694,795.394C453.694,795.394 442.207,789.119 435.696,778.129C429.185,767.139 401.417,662.692 401.417,662.692Z' },
+  { id: 'aorticFillBig', closedD: 'M925.906,1137.777C911.98,1150.55 895.459,1146.394 860.417,1125.713C750.864,1053.761 703.601,1004.311 639.63,951.458C620.579,935.718 593.582,914.052 581.417,880.415C566.803,840.008 570.213,786.753 570.213,786.753C582.025,756.682 599.413,705.563 599.413,705.563C599.413,705.563 594.055,697.159 584.361,689.781C641.761,635.771 679.715,636.201 704.098,636.521C728.481,636.841 775.256,644.345 796.032,662.757C827.289,690.457 844.523,758.628 817.14,755.947C809.079,755.158 800.314,773.909 796.651,783.138C786.308,809.192 786.838,836.548 790.983,861.891C794.576,883.857 800.733,900.596 803.023,899.313C805.651,897.84 797.991,882.712 794.928,851.5C793.394,835.877 795.502,820.479 800.481,806.309C811.169,775.888 824.909,779.607 829.778,820.196C835.141,864.905 852.404,886.06 874.779,937.288C896.609,987.267 919.514,1027.143 930.502,1067.118C941.063,1105.535 938.081,1126.61 925.906,1137.778Z' },
+  { id: 'aorticFillR', closedD: 'M659.673,1182.324C492.183,1146.584 410.355,1075.609 390.273,1031.694C373.46,994.926 418.854,1005.495 444.131,1017.176C466.52,1027.523 483.574,1048.915 486.056,1047.202C489.548,1044.792 458.609,1006.67 407.444,997.663C353.748,988.211 371.237,1009.685 348.567,1006.414C325.897,1003.134 293.418,940.159 295.716,875.818C297.019,839.33 304.908,804.585 335.546,790.031C354.63,780.965 398.163,796.542 415.894,811.822C435.992,829.142 440.951,852.417 445.074,875.802C452.482,917.818 461.673,949.222 480.134,978.322C493.193,998.906 514.956,1014.777 517.078,1011.967C519.55,1008.693 494.61,999.265 478.269,964.031C463.81,932.854 459.794,909.902 455.684,874.673C451.584,839.433 449.784,788.073 467.914,768.183C467.914,768.183 486.312,785.436 503.929,779.18C519.003,773.828 522.767,742.217 519.386,745.958C516.386,749.277 513.123,771.134 501.376,772.669C487.206,774.52 471.312,764.946 472.142,749.563C473.55,723.454 492.185,695.244 504.44,680.691C504.44,680.691 523.366,668.454 553.078,678.585C585.198,689.536 588.887,707.117 588.887,707.117C588.887,707.117 568.865,772.7 560.565,781.623C551.674,791.18 533.419,801.393 523.717,786.712C514.764,773.165 532.56,752.954 530.044,751.244C526.853,749.074 513.289,770.902 515.61,784.053C517.358,793.96 525.95,800.776 537.121,802.287C546.699,803.582 553.735,799.883 556.375,796.013C556.375,796.013 548.225,937.483 621.695,1015.603C695.165,1093.733 800.598,1161.03 822.315,1171.093C871.908,1194.074 827.165,1218.063 659.675,1182.323Z' },
+];
+const MITRAL_MORPH_TARGETS = [
+  { id: 'mitralBacking', closedD: 'M1983.021,870.277C1974.595,802.368 1927.676,760.644 1927.676,760.644C1929.296,744.274 1931.039,712.671 1904.23,668.628C1882.834,633.478 1830.981,618.029 1777.081,617.945C1723.181,617.861 1671.379,650.054 1650.279,679.679L1662.833,689.782C1650.979,678.648 1638.059,671.82 1616.421,669.011C1592.417,665.895 1577.549,674.564 1577.549,674.564C1552.655,704.053 1537.315,752.654 1537.315,752.654C1525.175,762.294 1514.491,811.997 1506.655,804.274C1487.932,785.82 1443.466,768.735 1413.635,773.204C1393.336,776.245 1366.91,804.969 1361.166,844.416C1353.64,896.097 1334.832,1072.242 1607.795,1159.199C1874.682,1244.22 1978.849,1251.457 2014.632,1230.841C2050.528,1210.16 2089.83,1178.529 2073.326,1121.314C2047.909,1033.199 1995.041,967.156 1983.021,870.277Z' },
+  { id: 'mitralCrossSection', closedD: 'M1983.021,870.277C1974.595,802.368 1927.676,760.644 1927.676,760.644C1929.296,744.274 1931.039,712.671 1904.23,668.628C1882.834,633.478 1830.981,618.029 1777.081,617.945C1723.181,617.861 1671.379,650.054 1650.279,679.679L1662.833,689.782C1650.979,678.648 1638.059,671.82 1616.421,669.011C1592.417,665.895 1577.549,674.564 1577.549,674.564C1552.655,704.053 1537.315,752.654 1537.315,752.654C1525.175,762.294 1514.491,811.997 1506.655,804.274C1487.932,785.82 1443.466,768.735 1413.635,773.204C1393.336,776.245 1366.91,804.969 1361.166,844.416C1353.64,896.097 1334.832,1072.242 1607.795,1159.199C1874.682,1244.22 1978.849,1251.457 2014.632,1230.841C2050.528,1210.16 2089.83,1178.529 2073.326,1121.314C2047.909,1033.199 1995.041,967.156 1983.021,870.277ZM1739.994,1165.326C1572.504,1129.586 1488.828,1075.609 1468.746,1031.694C1451.933,994.926 1497.67,994.789 1524.998,1000.135C1555.016,1006.007 1581.64,1026.614 1584.122,1024.901C1587.614,1022.491 1549.593,993.478 1498.495,987.88C1444.297,981.942 1449.71,1009.686 1427.04,1006.416C1404.37,1003.136 1371.891,940.161 1374.189,875.82C1375.492,839.332 1383.381,804.587 1414.019,790.033C1433.103,780.967 1476.636,796.544 1494.367,811.824C1514.465,829.144 1519.424,852.419 1523.547,875.804C1530.955,917.82 1529.151,956.035 1547.612,985.135C1560.671,1005.719 1584.938,1020.753 1587.059,1017.944C1589.531,1014.67 1567.08,1009.582 1550.74,974.348C1536.281,943.171 1538.267,909.904 1534.157,874.674C1530.057,839.434 1528.257,788.074 1546.387,768.184C1546.387,768.184 1562.74,784.326 1580.357,778.071C1595.431,772.719 1596.76,737.564 1593.378,741.305C1590.378,744.624 1588.785,768.621 1577.038,770.156C1562.868,772.007 1549.785,764.947 1550.615,749.564C1552.023,723.455 1570.658,695.245 1582.913,680.692C1582.913,680.692 1601.839,668.455 1631.551,678.586C1663.671,689.537 1667.36,707.118 1667.36,707.118C1667.36,707.118 1647.338,772.701 1639.038,781.624C1630.147,791.181 1615.847,801.433 1606.145,786.752C1597.192,773.205 1621.033,752.956 1618.518,751.245C1615.327,749.075 1595.144,769.771 1597.465,782.922C1599.213,792.829 1604.425,800.777 1615.595,802.288C1625.173,803.583 1632.209,799.884 1634.849,796.014C1634.849,796.014 1626.699,937.484 1700.169,1015.604C1773.639,1093.734 1879.072,1161.031 1900.789,1171.094C1950.382,1194.075 1907.487,1201.066 1739.997,1165.326ZM2004.379,1137.777C1990.453,1150.55 1973.932,1146.394 1938.89,1125.713C1829.337,1053.761 1782.074,1004.311 1718.103,951.458C1699.052,935.718 1672.055,914.052 1659.89,880.415C1645.276,840.008 1648.686,786.753 1648.686,786.753C1660.498,756.682 1677.886,705.563 1677.886,705.563C1677.886,705.563 1672.528,697.159 1662.834,689.781C1720.234,635.771 1758.188,636.201 1782.571,636.521C1806.954,636.841 1853.729,644.345 1874.505,662.757C1905.762,690.457 1922.996,758.628 1895.613,755.947C1887.552,755.158 1873.248,774.073 1868.164,782.602C1853.225,807.662 1842.407,826.13 1844.866,862.198C1846.38,884.404 1855.214,907.141 1857.504,905.858C1860.132,904.385 1851.404,893.178 1851.404,861.815C1851.404,838.07 1859.654,811.423 1869.695,799.07C1887.751,776.857 1903.381,779.606 1908.25,820.195C1913.613,864.904 1934.22,914.793 1956.595,966.02C1978.425,1015.999 1996.925,1032.514 2007.914,1072.488C2018.475,1110.905 2016.554,1126.608 2004.378,1137.776Z' },
+  { id: 'mitralLeaflet', closedD: 'M1654.784,896.884C1678.547,907.368 1688.379,903.967 1694.611,893.603C1705.973,874.709 1673.655,865.109 1675.973,862.709C1678.784,859.799 1695.358,865.466 1700.994,877.262C1706.483,888.751 1704.64,897.937 1694.1,905.602C1685.674,911.73 1676.23,912.712 1658.584,906.798C1630.251,897.301 1583.895,867.074 1548.825,830.436C1493.165,772.287 1482.953,718.498 1476.634,659.903C1476.634,659.903 1495.208,633.649 1517.996,625.044C1541.302,616.242 1559.166,616.16 1580.29,621.862C1580.29,621.862 1574.869,652.926 1622.358,725.309C1648.836,765.667 1708.207,802.744 1740.063,824.118C1740.063,824.118 1752.322,819.708 1770.824,825.688C1796.101,833.858 1816.526,845.603 1840.876,879.753C1849.288,891.55 1853.536,907.619 1850.61,908.224C1846.908,908.99 1845.888,881.139 1806.825,853.007C1765.591,823.312 1744.402,845.692 1744.402,845.692C1744.402,845.692 1745.181,856.854 1734.828,865.862C1729.643,870.374 1716.523,878.786 1698.443,858.879C1690.06,849.649 1690.961,840.681 1692.634,840.017C1694.485,839.283 1697.46,850.444 1704.825,856.836C1716.41,866.889 1726.242,864.808 1732.54,857.337C1735.929,853.316 1741.796,843.626 1723.338,825.138C1704.88,806.65 1668.925,789.554 1647.636,766.287C1602.521,716.982 1592.104,690.457 1581.381,666.713C1575.106,652.819 1573.571,628.464 1572.632,628.225C1559.806,624.968 1543.001,623.605 1520.278,632.414C1499.588,640.434 1486.658,661.99 1486.658,661.99C1486.658,661.99 1491.961,761.87 1553.935,821.309C1601.43,866.862 1628.744,885.394 1654.786,896.883Z' },
+  { id: 'mitralFillSmall', closedD: 'M1479.89,662.692C1488.225,649.555 1512.635,629.947 1523.55,626.501C1534.465,623.054 1564.007,621.706 1570.656,624.203L1580.501,630.764L1648.341,755.628L1670.039,817.224L1640.741,850.543L1532.167,795.394C1532.167,795.394 1520.68,789.119 1514.169,778.129C1507.658,767.139 1479.89,662.692 1479.89,662.692Z' },
+  { id: 'mitralFillBig', closedD: 'M2004.379,1137.777C1990.453,1150.55 1973.932,1146.394 1938.89,1125.713C1829.337,1053.761 1782.074,1004.311 1718.103,951.458C1699.052,935.718 1672.055,914.052 1659.89,880.415C1645.276,840.008 1648.686,786.753 1648.686,786.753C1660.498,756.682 1677.886,705.563 1677.886,705.563C1677.886,705.563 1672.528,697.159 1662.834,689.781C1720.234,635.771 1758.188,636.201 1782.571,636.521C1806.954,636.841 1853.729,644.345 1874.505,662.757C1905.762,690.457 1922.996,758.628 1895.613,755.947C1887.552,755.158 1873.248,774.073 1868.164,782.602C1853.225,807.662 1842.407,826.13 1844.866,862.198C1846.38,884.404 1855.214,907.141 1857.504,905.858C1860.132,904.385 1851.404,893.178 1851.404,861.815C1851.404,838.07 1859.654,811.423 1869.695,799.07C1887.751,776.857 1903.381,779.606 1908.25,820.195C1913.613,864.904 1934.22,914.793 1956.595,966.02C1978.425,1015.999 1996.925,1032.514 2007.914,1072.488C2018.475,1110.905 2016.554,1126.608 2004.378,1137.776Z' },
+  { id: 'mitralFillR', closedD: 'M1739.994,1165.326C1572.504,1129.586 1488.828,1075.609 1468.746,1031.694C1451.933,994.926 1497.67,994.789 1524.998,1000.135C1555.016,1006.007 1581.64,1026.614 1584.122,1024.901C1587.614,1022.491 1549.593,993.478 1498.495,987.88C1444.297,981.942 1449.71,1009.686 1427.04,1006.416C1404.37,1003.136 1371.891,940.161 1374.189,875.82C1375.492,839.332 1383.381,804.587 1414.019,790.033C1433.103,780.967 1476.636,796.544 1494.367,811.824C1514.465,829.144 1519.424,852.419 1523.547,875.804C1530.955,917.82 1529.151,956.035 1547.612,985.135C1560.671,1005.719 1584.938,1020.753 1587.059,1017.944C1589.531,1014.67 1567.08,1009.582 1550.74,974.348C1536.281,943.171 1538.267,909.904 1534.157,874.674C1530.057,839.434 1528.257,788.074 1546.387,768.184C1546.387,768.184 1562.74,784.326 1580.357,778.071C1595.431,772.719 1596.76,737.564 1593.378,741.305C1590.378,744.624 1588.785,768.621 1577.038,770.156C1562.868,772.007 1549.785,764.947 1550.615,749.564C1552.023,723.455 1570.658,695.245 1582.913,680.692C1582.913,680.692 1601.839,668.455 1631.551,678.586C1663.671,689.537 1667.36,707.118 1667.36,707.118C1667.36,707.118 1647.338,772.701 1639.038,781.624C1630.147,791.181 1615.847,801.433 1606.145,786.752C1597.192,773.205 1621.033,752.956 1618.518,751.245C1615.327,749.075 1595.144,769.771 1597.465,782.922C1599.213,792.829 1604.425,800.777 1615.595,802.288C1625.173,803.583 1632.209,799.884 1634.849,796.014C1634.849,796.014 1626.699,937.484 1700.169,1015.604C1773.639,1093.734 1879.072,1161.031 1900.789,1171.094C1950.382,1194.075 1907.487,1201.066 1739.997,1165.326Z' },
+];
 
 /* ---------- Module 3-2: Natural Shear Waves (valve closure) Interactive ----------
    Both valves are drawn in one combined SVG (with baked-in static labels —
@@ -751,7 +1111,18 @@ function initArfInteractive() {
    valve's animation never touches the other valve's dot in the same
    SVG. Same replay-on-click interaction as the ARF panel. One instance
    per valve (aortic/mitral), configured by element id so the same
-   logic drives both. */
+   logic drives both.
+
+   Nothing moves until the user asks. On load each heart is put into its
+   idle frame — valve open, no dot, no wave, no label, no tween running —
+   and stays there. A Play press then runs one sequence:
+
+     0ms ....... closure morph begins from the open shape
+     900ms ..... closure lands; the dot pops and the label fades in
+     ~1350ms ... dot pop ends, which triggers the traveling wave
+
+   Reset returns to that same idle frame, so a reset heart and a
+   freshly-loaded heart are indistinguishable. */
 function initValveInteractive(cfg) {
   const stage = document.getElementById(cfg.stageId);
   const dotGroup = document.getElementById(cfg.dotGroupId);
@@ -760,10 +1131,81 @@ function initValveInteractive(cfg) {
   const hitArea = document.getElementById(cfg.hitAreaId);
   const playBtn = document.getElementById(cfg.playBtnId);
   const resetBtn = document.getElementById(cfg.resetBtnId);
+  const labelEl = cfg.labelId ? document.getElementById(cfg.labelId) : null;
   if (!stage || !dotGroup || !dotEl || !waveEl || !hitArea || !playBtn || !resetBtn) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PULSE_DURATION = cfg.drawDuration || 2300;
+  const MORPH_DURATION = 900;
+
+  // Debug aid for inspecting the closure morph itself (not shipped-on by
+  // default): add ?morphDebug to the URL to play it at 0.25x speed, or
+  // drive it by hand from the console — window.valveMorphDebug[dotGroupId]
+  // exposes { setProgress(0..1), targets } against THIS valve's live
+  // elements, e.g. valveMorphDebug.aorticDotGroup.setProgress(0.4).
+  const morphDebugSlow = /[?&]morphDebug\b/.test(location.search);
+  const morphDurationActive = morphDebugSlow ? MORPH_DURATION / 0.25 : MORPH_DURATION;
+
+  // Build one tween per closure-morph target: parse this element's own
+  // authored 'd' (the OPEN valve — the resting state, read live so the
+  // page's artwork stays the source of truth) and the closed shape it
+  // animates to, once at init, so every animation frame afterward is
+  // just evaluating a cached function, not re-parsing path strings.
+  const morphTargets = (cfg.morphTargets || []).map((m) => {
+    const el = document.getElementById(m.id);
+    if (!el) return null;
+    const openD = el.getAttribute('d');
+    return { el, openD, tween: makeDirectTween(openD, m.closedD) };
+  }).filter(Boolean);
+
+  function applyMorph(progress) {
+    morphTargets.forEach(({ el, tween }) => el.setAttribute('d', tween(progress)));
+  }
+  // Back to rest = back to the valve-open shape the HTML authored.
+  // Restores the exact authored string rather than tween(0) so repeated
+  // play/reset cycles can't accumulate serialization drift.
+  function resetMorph() {
+    morphTargets.forEach(({ el, openD }) => el.setAttribute('d', openD));
+  }
+
+  window.valveMorphDebug = window.valveMorphDebug || {};
+  window.valveMorphDebug[cfg.dotGroupId] = { setProgress: applyMorph, reset: resetMorph, targets: morphTargets };
+
+  function showLabel() { if (labelEl) labelEl.classList.add('revealed'); }
+  function hideLabel() { if (labelEl) labelEl.classList.remove('revealed'); }
+
+  let morphStart = null;
+  let morphLoopRunning = false;
+  let onMorphDone = null;
+  function morphTick(now) {
+    if (morphStart == null) { morphLoopRunning = false; return; }
+    const p = Math.min((now - morphStart) / morphDurationActive, 1);
+    applyMorph(easeOutCubic(p));
+    if (p < 1) {
+      requestAnimationFrame(morphTick);
+    } else {
+      morphStart = null;
+      morphLoopRunning = false;
+      const done = onMorphDone;
+      onMorphDone = null;
+      if (done) done();
+    }
+  }
+  // done() fires on the frame the valve finishes closing — that's what
+  // starts the dot/wave, so the wave can only ever leave a shut valve.
+  function runMorph(done) {
+    if (!morphTargets.length) { if (done) done(); return; }
+    onMorphDone = done || null;
+    morphStart = performance.now();
+    if (!morphLoopRunning) {
+      morphLoopRunning = true;
+      requestAnimationFrame(morphTick);
+    }
+  }
+  function cancelMorph() {
+    morphStart = null;
+    onMorphDone = null;
+  }
 
   // Read the authored path's start point and overall direction ONCE,
   // before its 'd' ever gets overwritten — everything after this uses
@@ -867,24 +1309,37 @@ function initValveInteractive(cfg) {
     waveEl.setAttribute('d', '');
   }
 
-  function playSequence() {
+  // The resting frame: valve open, nothing animating, nothing revealed.
+  // Page load lands here and stays; Reset returns here.
+  function showIdle() {
     dotGroup.classList.remove('playing', 'no-motion');
+    cancelMorph();
     clearPulse();
+    resetMorph();
+    hideLabel();
+  }
+
+  function playSequence() {
+    showIdle();
     void stage.offsetWidth; // force reflow so restarted animations replay
 
     if (reduceMotion) {
+      // No tweening: land on the finished state outright.
+      applyMorph(1);
+      showLabel();
       dotGroup.classList.add('playing', 'no-motion');
       // Illustrative frame: hump parked right at the dot, showing the
       // wave's shape without animating it across the route.
       waveEl.setAttribute('d', buildWaveD(hcStart));
       return;
     }
-    dotGroup.classList.add('playing');
-  }
 
-  function resetSequence() {
-    dotGroup.classList.remove('playing', 'no-motion');
-    clearPulse();
+    runMorph(() => {
+      // Valve is now shut — pop the dot at the annulus and bring the
+      // label in. The dot's animationend then launches the wave.
+      showLabel();
+      dotGroup.classList.add('playing');
+    });
   }
 
   dotEl.addEventListener('animationend', (e) => {
@@ -894,9 +1349,9 @@ function initValveInteractive(cfg) {
 
   hitArea.addEventListener('click', playSequence);
   playBtn.addEventListener('click', playSequence);
-  resetBtn.addEventListener('click', resetSequence);
+  resetBtn.addEventListener('click', showIdle);
 
-  playSequence();
+  showIdle();
 }
 
 /* ---------- Module 3-3: Ultrafast vs. Conventional Imaging Interactive ----------
@@ -968,7 +1423,10 @@ function initUltrafastVsConventionalInteractive() {
     const secondarySlider = document.getElementById(ids.secondarySlider);
     const secondaryLabel = document.getElementById(ids.secondaryLabel);
     const stageCanvas = document.getElementById(ids.stageCanvas);
-    const frameRateReadout = document.getElementById(ids.frameRateReadout);
+    // Conventional-only: displays the frame rate (fps). The ultrafast panel has no
+    // equivalent readout (its rate is already shown on the fps slider above), so
+    // ids.frameStatReadout is left unset there and this resolves to null.
+    const frameStatReadout = document.getElementById(ids.frameStatReadout);
     const sampleCountReadout = document.getElementById(ids.sampleCountReadout);
     const plotCanvas = document.getElementById(ids.plotCanvas);
     const estReadout = document.getElementById(ids.estReadout);
@@ -1265,10 +1723,9 @@ function initUltrafastVsConventionalInteractive() {
       if (velocityLabel) velocityLabel.textContent = `${velocity.toFixed(1)} m/s`;
       if (kind === 'conventional') {
         if (secondaryLabel) secondaryLabel.textContent = `${Number(secondarySlider.value)} cm`;
-        if (frameRateReadout) frameRateReadout.textContent = `≈ ${Math.round(1 / frameDurationS)} fps`;
+        if (frameStatReadout) frameStatReadout.textContent = `≈ ${Math.round(1 / frameDurationS)} fps`;
       } else {
         if (secondaryLabel) secondaryLabel.textContent = `${Number(secondarySlider.value).toLocaleString()} fps`;
-        if (frameRateReadout) frameRateReadout.textContent = `${(frameDurationS * 1000).toFixed(2)} ms`;
       }
       if (sampleCountReadout) sampleCountReadout.textContent = String(samples.length);
       if (trueReadout) trueReadout.textContent = `${velocity.toFixed(1)} m/s`;
@@ -1357,7 +1814,7 @@ function initUltrafastVsConventionalInteractive() {
   makePanel('conventional', {
     velocitySlider: 'convVelocitySlider', velocityLabel: 'convVelocityLabel',
     secondarySlider: 'convDepthSlider', secondaryLabel: 'convDepthLabel',
-    stageCanvas: 'convStageCanvas', frameRateReadout: 'convFrameRateReadout',
+    stageCanvas: 'convStageCanvas', frameStatReadout: 'convFrameRateReadout',
     sampleCountReadout: 'convSampleCountReadout', plotCanvas: 'convPlotCanvas',
     estReadout: 'convEstReadout', trueReadout: 'convTrueReadout',
     playBtn: 'convPlayToggle', resetBtn: 'convResetBtn',
@@ -1365,7 +1822,7 @@ function initUltrafastVsConventionalInteractive() {
   makePanel('ultrafast', {
     velocitySlider: 'ultraVelocitySlider', velocityLabel: 'ultraVelocityLabel',
     secondarySlider: 'ultraFpsSlider', secondaryLabel: 'ultraFpsLabel',
-    stageCanvas: 'ultraStageCanvas', frameRateReadout: 'ultraFrameRateReadout',
+    stageCanvas: 'ultraStageCanvas',
     sampleCountReadout: 'ultraSampleCountReadout', plotCanvas: 'ultraPlotCanvas',
     estReadout: 'ultraEstReadout', trueReadout: 'ultraTrueReadout',
     playBtn: 'ultraPlayToggle', resetBtn: 'ultraResetBtn',
@@ -1778,12 +2235,25 @@ function initDispersionInteractive() {
     if (w <= 1) return;
 
     const FREQ_MAX = 800, VEL_MAX = 9;
-    const marginL = 48, marginR = 12, marginT = 14, marginB = 46;
+    const marginL = 48, marginR = 12, marginT = 26, marginB = 46;
     const plotW = Math.max(w - marginL - marginR, 1);
     const plotH = Math.max(h - marginT - marginB, 1);
     const X = (f) => marginL + (f / FREQ_MAX) * plotW;
     const Y = (v) => marginT + plotH - (Math.min(v, VEL_MAX) / VEL_MAX) * plotH;
     const mu2 = currentMu2();
+
+    // Y-axis title — sits in the reserved top margin, left-aligned above the
+    // axis, rather than rotated along the axis height: a rotated title would
+    // occupy the same x range as the point velocity labels below, and those
+    // can land anywhere along the full plot height depending on mu2 (see
+    // drawGuidesAndDot), so a fixed rotated position could not avoid
+    // colliding with one of them. This position is fixed above the plot
+    // area instead, so it never collides with anything drawn below it.
+    chartCtx.fillStyle = TEXT_3;
+    chartCtx.font = '600 9px Inter, sans-serif';
+    chartCtx.textAlign = 'left';
+    chartCtx.textBaseline = 'top';
+    chartCtx.fillText('Velocity (m/s)', marginL, 2);
 
     chartCtx.strokeStyle = BORDER;
     chartCtx.lineWidth = 1;
@@ -1817,6 +2287,35 @@ function initDispersionInteractive() {
       if (i === 0) chartCtx.moveTo(px, py); else chartCtx.lineTo(px, py);
     }
     chartCtx.stroke();
+
+    // Inline labels for the two lines, anchored to values that are always
+    // extremal rather than to a fixed screen position: the curve is
+    // monotonically increasing in frequency and both data points are
+    // themselves samples of this same curve (see pointFor below), so the
+    // curve's value at FREQ_MAX is always the highest thing drawn on the
+    // chart, and the reference's fixed height (C0) is always the lowest —
+    // in every case, including mu2 = 0, where curve and reference coincide
+    // exactly. A label offset up from the curve's right end, and one offset
+    // down from the reference line, therefore can never be crossed by the
+    // curve, either data point, or their guides, at any viscoelasticity
+    // level or canvas width.
+    chartCtx.font = '600 9px Inter, sans-serif';
+    const labelMaxWidth = plotW - 4; // keep a long label from spilling past the y-axis
+    function fitLabel(full, short) {
+      return chartCtx.measureText(full).width <= labelMaxWidth ? full : short;
+    }
+    const labelX = marginL + plotW - 2;
+    chartCtx.textAlign = 'right';
+
+    chartCtx.fillStyle = TEXT_3;
+    chartCtx.textBaseline = 'bottom';
+    const curveLabelY = Math.max(Y(voigtVelocity(FREQ_MAX, mu2)) - 6, marginT + 12);
+    chartCtx.fillText(fitLabel('Dispersion curve', 'Dispersion'), labelX, curveLabelY);
+
+    chartCtx.fillStyle = TEXT_2;
+    chartCtx.textBaseline = 'top';
+    const refLabelY = Math.min(Y(C0) + 8, marginT + plotH - 12);
+    chartCtx.fillText(fitLabel('Reference (viscoelasticity: none)', 'Reference'), labelX, refLabelY);
 
     function pointFor(freq) {
       const v = voigtVelocity(freq, mu2);
@@ -1957,8 +2456,31 @@ function initDispersionInteractive() {
    monotonic saturating function of thickness/wavelength, tanh-shaped,
    that is low at small ratios and rises toward the true bulk shear
    velocity as the ratio grows. One function, apparentVelocity(), drives
-   the wall cross-section's sine amplitude, the chart curve, the current
-   point, and the deviation readout, so all four stay in agreement. */
+   the wall cross-section's bouncing ray, the chart curve, the current
+   point, and the deviation readout, so all four stay in agreement.
+
+   The wall cross-section shows a single ball tracing a smooth wave —
+   simple-harmonic motion between the endocardial/epicardial boundaries —
+   as it crosses left to right (the actual mechanism behind guided-wave
+   dispersion: reflections at the boundaries interfere with the outgoing
+   wave; a real transverse wave's displacement eases smoothly through its
+   turning points rather than bouncing off them at a sharp corner, which
+   is why this is SHM and not a zig-zag). Horizontally it advances at a
+   constant rate — apparentVelocity(), its net rightward progress.
+   Vertically it oscillates at an angular frequency derived from how much
+   of the true bulk shear velocity ISN'T going into that rightward
+   progress: thin walls (small apparent/true ratio) oscillate fast and
+   tight, so the ball visibly takes longer to cross while completing many
+   cycles; thick walls oscillate slowly, so the path flattens toward one
+   long, gentle arc.
+   Two earlier versions are worth knowing not to regress to. (1) A whole
+   zig-zag texture scrolled across the canvas — its period varied ~65x
+   across the slider range while the crossing speed varied only ~2x, so
+   what read to the eye was "the pattern is being stretched," not "it's
+   moving faster or slower." (2) A single ball with sharp corner
+   reflections instead of SHM — the speed fix, but not wave-shaped.
+   A single tracked point with a measurable crossing time avoids the
+   first problem; smooth vertical easing avoids the second. */
 function initGuidedWaveInteractive() {
   if (!document.querySelector('.gw-interactive')) return;
 
@@ -1997,6 +2519,35 @@ function initGuidedWaveInteractive() {
   let wallSize = { width: 0, height: 0 };
   let chartSize = { width: 0, height: 0 };
 
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const WALL_ANIM_DURATION_S = 2.5; // s to cross the canvas at V_TRUE if it never bounced (thick-wall limit)
+  const TRAIL_DURATION_S = 0.6; // how much of the ball's recent path stays visible, fading out
+  function wallSpeedScale() {
+    return wallSize.width > 1 ? wallSize.width / WALL_ANIM_DURATION_S / V_TRUE : 0; // px/s per (m/s)
+  }
+  // vxPxPerSec: constant horizontal rate = apparentVelocity(), scaled to px/s.
+  // omegaY: angular frequency (rad/s) of the vertical SHM, derived from a
+  // reference "how fast would this gap get crossed at constant vBounce"
+  // time — same relationship the old zig-zag used, just feeding a smooth
+  // oscillator's frequency instead of a corner-reflecting ball's speed.
+  function motionParams(thicknessMm, thicknessPx) {
+    const vApparent = apparentVelocity(thicknessMm); // m/s, net rightward
+    const vBounceRef = Math.sqrt(Math.max(V_TRUE * V_TRUE - vApparent * vApparent, 0)); // m/s, reference vertical rate
+    const scale = wallSpeedScale();
+    const vxPxPerSec = vApparent * scale;
+    const vBounceRefPxPerSec = vBounceRef * scale;
+    const halfPeriodS = vBounceRefPxPerSec > 1e-6 ? thicknessPx / vBounceRefPxPerSec : Infinity;
+    const omegaY = isFinite(halfPeriodS) ? Math.PI / halfPeriodS : 0;
+    return { vxPxPerSec, omegaY };
+  }
+
+  // Ball state, driven live off the slider each frame — no restart
+  // needed when the slider moves mid-flight.
+  let ballX = 0;
+  let yPhase = 0; // radians; y = midY - amplitude*cos(yPhase), so phase 0 starts at the top boundary
+  let trail = []; // recent {x, y, t} points, oldest first, for the fading tail
+  let gwLastTs = null;
+
   function sizeCanvas(canvas) {
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
@@ -2008,11 +2559,8 @@ function initGuidedWaveInteractive() {
     return { width, height };
   }
 
-  function drawWall() {
-    const w = wallSize.width, h = wallSize.height;
-    wallCtx.clearRect(0, 0, w, h);
-    if (w <= 1) return;
-
+  function wallGeometry() {
+    const h = wallSize.height;
     const TOP_MARGIN = 28, BOTTOM_MARGIN = 34;
     const usableH = Math.max(h - TOP_MARGIN - BOTTOM_MARGIN, 1);
     const thicknessMm = Number(slider.value);
@@ -2020,9 +2568,11 @@ function initGuidedWaveInteractive() {
     const pxPerMmY = usableH / maxMm;
     const thicknessPx = thicknessMm * pxPerMmY;
     const baselineY = TOP_MARGIN + usableH / 2;
-    const topY = baselineY - thicknessPx / 2;
-    const bottomY = baselineY + thicknessPx / 2;
+    return { thicknessMm, thicknessPx, topY: baselineY - thicknessPx / 2, bottomY: baselineY + thicknessPx / 2 };
+  }
 
+  function drawBoundaries(topY, bottomY) {
+    const w = wallSize.width;
     wallCtx.strokeStyle = TEXT_3;
     wallCtx.lineWidth = 1.75;
     wallCtx.beginPath();
@@ -2031,43 +2581,74 @@ function initGuidedWaveInteractive() {
     wallCtx.moveTo(0, bottomY);
     wallCtx.lineTo(w, bottomY);
     wallCtx.stroke();
+  }
 
-    // Amplitude is capped by the gap itself — as the wall narrows, the
-    // wave visibly gets squeezed between the boundaries instead of just
-    // sitting inside an ever-shrinking box unaffected.
-    const amplitude = Math.min(Math.max(thicknessPx / 2 - 5, 3), 26);
-    const PX_PER_MM_X = 13;
-    const wavelengthPx = WAVELENGTH_MM * PX_PER_MM_X;
-    const k = (2 * Math.PI) / wavelengthPx;
+  // prefers-reduced-motion fallback: a static illustrative sine curve
+  // drawn across the full width. Static viewing doesn't have the
+  // animated version's "period vs. speed" confound (see module header
+  // comment), so this is a fine way to still show oscillation density
+  // at a glance.
+  function drawWallStatic() {
+    const w = wallSize.width, h = wallSize.height;
+    wallCtx.clearRect(0, 0, w, h);
+    if (w <= 1) return;
+    const { thicknessMm, thicknessPx, topY, bottomY } = wallGeometry();
+    drawBoundaries(topY, bottomY);
+
+    const { vxPxPerSec, omegaY } = motionParams(thicknessMm, thicknessPx);
+    const omegaX = vxPxPerSec > 1e-6 ? omegaY / vxPxPerSec : 0; // rad per px
+    const midY = (topY + bottomY) / 2, amp = thicknessPx / 2;
 
     wallCtx.strokeStyle = ACCENT;
     wallCtx.lineWidth = 2.25;
     wallCtx.beginPath();
     const step = 2;
     for (let x = 0; x <= w; x += step) {
-      const y = baselineY + amplitude * Math.sin(k * x);
+      const y = midY - amp * Math.cos(omegaX * x);
       if (x === 0) wallCtx.moveTo(x, y); else wallCtx.lineTo(x, y);
     }
     wallCtx.stroke();
+  }
 
-    // Wavelength bracket, fixed within the reserved bottom margin so it
-    // never collides with the boundaries even at max wall thickness.
-    const x0 = 24;
-    const bracketY = h - BOTTOM_MARGIN + 11;
-    wallCtx.strokeStyle = TEXT_2;
-    wallCtx.lineWidth = 1;
+  // Animated frame: boundaries, the ball's short fading trail, and the
+  // ball itself. `now` is the rAF timestamp (or performance.now() for a
+  // one-off paint before the loop has started).
+  function drawWallAnimated(topY, bottomY, ballY, now) {
+    const w = wallSize.width, h = wallSize.height;
+    wallCtx.clearRect(0, 0, w, h);
+    if (w <= 1) return;
+    drawBoundaries(topY, bottomY);
+
+    for (let i = 1; i < trail.length; i++) {
+      const a = trail[i - 1], b = trail[i];
+      const age = (now - b.t) / 1000;
+      const alpha = Math.max(0, 1 - age / TRAIL_DURATION_S);
+      if (alpha <= 0) continue;
+      wallCtx.strokeStyle = ACCENT;
+      wallCtx.globalAlpha = alpha * 0.85;
+      wallCtx.lineWidth = 2.25;
+      wallCtx.beginPath();
+      wallCtx.moveTo(a.x, a.y);
+      wallCtx.lineTo(b.x, b.y);
+      wallCtx.stroke();
+    }
+    wallCtx.globalAlpha = 1;
+
+    wallCtx.fillStyle = ACCENT;
     wallCtx.beginPath();
-    wallCtx.moveTo(x0, bracketY - 4);
-    wallCtx.lineTo(x0, bracketY);
-    wallCtx.lineTo(x0 + wavelengthPx, bracketY);
-    wallCtx.lineTo(x0 + wavelengthPx, bracketY - 4);
-    wallCtx.stroke();
+    wallCtx.arc(ballX, ballY, 4, 0, Math.PI * 2);
+    wallCtx.fill();
+  }
 
-    wallCtx.fillStyle = TEXT_2;
-    wallCtx.font = '9px Inter, sans-serif';
-    wallCtx.textAlign = 'center';
-    wallCtx.textBaseline = 'top';
-    wallCtx.fillText(`λ = ${WAVELENGTH_MM} mm`, x0 + wavelengthPx / 2, bracketY + 3);
+  function currentBallY(topY, bottomY) {
+    const midY = (topY + bottomY) / 2, amp = (bottomY - topY) / 2;
+    return midY - amp * Math.cos(yPhase);
+  }
+
+  function drawWall() {
+    if (reduceMotion) { drawWallStatic(); return; }
+    const { topY, bottomY } = wallGeometry();
+    drawWallAnimated(topY, bottomY, currentBallY(topY, bottomY), performance.now());
   }
 
   function drawChart() {
@@ -2194,6 +2775,31 @@ function initGuidedWaveInteractive() {
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(wallCanvas);
   resizeObserver.observe(chartCanvas);
+
+  // Advances the ball, read live off the slider each frame — no restart
+  // needed when the slider moves mid-flight. Skipped under reduced-
+  // motion; drawWall()'s static frame covers that case instead.
+  function gwStep(now) {
+    const { thicknessMm, thicknessPx, topY, bottomY } = wallGeometry();
+    if (gwLastTs !== null) {
+      const dt = Math.min((now - gwLastTs) / 1000, 0.1); // clamp so a backgrounded tab doesn't jump the ball
+      const { vxPxPerSec, omegaY } = motionParams(thicknessMm, thicknessPx);
+      ballX += vxPxPerSec * dt;
+      yPhase += omegaY * dt;
+      const ballY = currentBallY(topY, bottomY);
+      trail.push({ x: ballX, y: ballY, t: now });
+      while (trail.length && (now - trail[0].t) / 1000 > TRAIL_DURATION_S) trail.shift();
+      if (ballX > wallSize.width) { // completed a crossing — start the next lap clean
+        ballX = 0;
+        yPhase = 0;
+        trail = [];
+      }
+    }
+    gwLastTs = now;
+    drawWallAnimated(topY, bottomY, currentBallY(topY, bottomY), now);
+    requestAnimationFrame(gwStep);
+  }
+  if (!reduceMotion) requestAnimationFrame(gwStep);
 
   updateThicknessLabel();
   resize();

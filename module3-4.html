@@ -65,9 +65,11 @@
           SWE measurements.</p>
 
         <h3>Viscoelasticity</h3>
-        <p class="body-text">Press your hand into memory foam quickly versus slowly: a fast push meets more resistance
-          than a slow one. Myocardial tissue behaves similarly — its response depends on how fast it's deformed, which
-          means different frequency components of a shear wave travel at different speeds.</p>
+        <p class="body-text">Memory foam feels soft if you press into it slowly and firm if you press fast — that's
+          about how hard it pushes back while you're pressing, not how slowly it springs back afterward. Myocardial
+          tissue does something similar: how stiff its response is depends on how quickly it's being deformed. That
+          matters for shear waves because a wave carries many frequencies at once, and each one deforms the tissue at
+          its own rate, so different frequency components of a shear wave travel at different speeds.</p>
         <p class="body-text">The μ = ρc² derivation assumes purely elastic behavior. In this model, energy is fully
           stored and returned with no loss. However, the myocardium is viscoelastic: its mechanical response includes
           both elastic and viscous components, which means it resists more when stretched faster and recovers slowly and
@@ -93,7 +95,7 @@
                 <button class="icon-btn disp-play-btn" id="dispPlayBtn" type="button"
                   aria-label="Play wave propagation animation">▶</button>
                 <button class="icon-btn disp-reset-btn" id="dispResetBtn" type="button"
-                  aria-label="Reset wave propagation animation">↺</button>
+                  aria-label="Reset wave propagation animation" data-tooltip="Restart animation">↺</button>
               </div>
               <div class="disp-slider-group">
                 <div class="wave-slider-labels">
@@ -272,10 +274,10 @@
             <div class="gw-wall-row">
               <p class="gw-wall-label">Wall</p>
               <canvas class="gw-wall-canvas" id="gwWallCanvas" role="img"
-                aria-label="Cross-section of the myocardial wall showing a guided shear wave of fixed wavelength traveling between the endocardial and epicardial boundaries. As wall thickness decreases, the boundaries close in on the wave and visibly constrain it; as wall thickness increases, the boundaries move apart and the wave looks increasingly free."></canvas>
+                aria-label="Animated cross-section of the myocardial wall showing a shear wave oscillating smoothly between the endocardial and epicardial boundaries as it crosses left to right, leaving a short fading trail. Its net rightward crossing speed is the apparent velocity. As wall thickness decreases, it oscillates faster and tighter and visibly takes longer to cross the panel; as wall thickness increases, the oscillation slows and flattens toward one long, gentle arc that crosses quickly."></canvas>
             </div>
-            <p class="wave-canvas-caption">wall cross-section — wavelength fixed at 5 mm; wall thickness follows the
-              slider above</p>
+            <p class="wave-canvas-caption">wall cross-section — watch how long the wave takes to cross: wall
+              thickness (slider above) sets how tightly it oscillates on the way across</p>
 
             <div class="disp-chart-section">
               <canvas class="gw-chart-canvas" id="gwChartCanvas" role="img"

@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="832" viewBox="0 0 1280 832" font-family="Inter, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <title>Sampling rate and the ability to resolve motion</title>
+  <desc>A car crosses a scene at constant speed. The upper row samples it at t = 0 s and t = 4 s only; the lower row samples every second over the same span. The lower-left plot shows that two samples admit many different motions; the lower-right plot shows five samples resolving a single straight line of slope 30 m/s.</desc>
+
+  <rect id="background" width="1280" height="832" fill="#F5FAFA"/>
+
+  <!-- ============================================================
+       MISSING-SAMPLE GUIDES (sparse row: no frame at t = 1, 2, 3 s)
+       ============================================================ -->
+  <g id="missing-sample-guides" stroke="#C8D8D7" stroke-width="2" stroke-dasharray="6 8">
+    <path d="M394,36 V184"/>
+    <path d="M640,36 V184"/>
+    <path d="M886,36 V184"/>
+  </g>
+
+  <!-- ============================================================
+       ROW 1 - SPARSE SAMPLING (2 frames: t = 0 s, t = 4 s)
+       ============================================================ -->
+  <g id="row-sparse">
+
+    <g id="sparse-frame-t0" transform="translate(32,36)">
+      <rect width="232" height="132" fill="#FFFFFF" stroke="#C8D8D7" stroke-width="2"/>
+      <path d="M0,104 H232" stroke="#A0BFBD" stroke-width="2"/>
+      <rect x="152" y="20" width="24" height="84" fill="#C8D8D7"/>
+      <g id="car-sparse-t0" transform="translate(14,104)">
+        <circle cx="22" cy="-11" r="11" fill="#0F1F1E"/>
+        <circle cx="68" cy="-11" r="11" fill="#0F1F1E"/>
+        <path d="M2,-12 L2,-26 L16,-28 L27,-44 L55,-44 L65,-28 L84,-26 L86,-12 Z" fill="#0C7A70" stroke="#0C7A70" stroke-width="4" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <g id="sparse-frame-t4" transform="translate(1016,36)">
+      <rect width="232" height="132" fill="#FFFFFF" stroke="#C8D8D7" stroke-width="2"/>
+      <path d="M0,104 H232" stroke="#A0BFBD" stroke-width="2"/>
+      <rect x="152" y="20" width="24" height="84" fill="#C8D8D7"/>
+      <g id="car-sparse-t4" transform="translate(130,104)">
+        <circle cx="22" cy="-11" r="11" fill="#0F1F1E"/>
+        <circle cx="68" cy="-11" r="11" fill="#0F1F1E"/>
+        <path d="M2,-12 L2,-26 L16,-28 L27,-44 L55,-44 L65,-28 L84,-26 L86,-12 Z" fill="#0C7A70" stroke="#0C7A70" stroke-width="4" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+  </g>
+
+  <!-- ============================================================
+       SHARED TIMELINE
+       ============================================================ -->
+  <g id="timeline">
+    <path d="M104,194 H1196" stroke="#A0BFBD" stroke-width="2"/>
+    <polygon points="1194,187 1216,194 1194,201" fill="#A0BFBD"/>
+    <g stroke="#A0BFBD" stroke-width="2">
+      <path d="M148,186 V202"/>
+      <path d="M394,186 V202"/>
+      <path d="M640,186 V202"/>
+      <path d="M886,186 V202"/>
+      <path d="M1132,186 V202"/>
+    </g>
+    <g font-size="24" fill="#505252" text-anchor="middle">
+      <text x="148" y="230">0 s</text>
+      <text x="394" y="230">1 s</text>
+      <text x="640" y="230">2 s</text>
+      <text x="886" y="230">3 s</text>
+      <text x="1132" y="230">4 s</text>
+    </g>
+    <text x="1228" y="203" font-size="24" fill="#505252">t</text>
+  </g>
+
+  <!-- ============================================================
+       ROW 2 - DENSE SAMPLING (5 frames: t = 0 to 4 s)
+       ============================================================ -->
+  <g id="row-dense">
+
+    <g id="dense-frame-t0" transform="translate(32,252)">
+      <rect width="232" height="132" fill="#FFFFFF" stroke="#C8D8D7" stroke-width="2"/>
+      <path d="M0,104 H232" stroke="#A0BFBD" stroke-width="2"/>
+      <rect x="152" y="20" width="24" height="84" fill="#C8D8D7"/>
+      <g id="car-dense-t0" transform="translate(14,104)">
+        <circle cx="22" cy="-11" r="11" fill="#0F1F1E"/>
+        <circle cx="68" cy="-11" r="11" fill="#0F1F1E"/>
+        <path d="M2,-12 L2,-26 L16,-28 L27,-44 L55,-44 L65,-28 L84,-26 L86,-12 Z" fill="#0C7A70" stroke="#0C7A70" stroke-width="4" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <g id="dense-frame-t1" transform="translate(278,252)">
+      <rect width="232" height="132" fill="#FFFFFF" stroke="#C8D8D7" stroke-width="2"/>
+      <path d="M0,104 H232" stroke="#A0BFBD" stroke-width="2"/>
+      <rect x="152" y="20" width="24" height="84" fill="#C8D8D7"/>
+      <g id="car-dense-t1" transform="translate(43,104)">
+        <circle cx="22" cy="-11" r="11" fill="#0F1F1E"/>
+        <circle cx="68" cy="-11" r="11" fill="#0F1F1E"/>
+        <path d="M2,-12 L2,-26 L16,-28 L27,-44 L55,-44 L65,-28 L84,-26 L86,-12 Z" fill="#0C7A70" stroke="#0C7A70" stroke-width="4" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <g id="dense-frame-t2" transform="translate(524,252)">
+      <rect width="232" height="132" fill="#FFFFFF" stroke="#C8D8D7" stroke-width="2"/>
+      <path d="M0,104 H232" stroke="#A0BFBD" stroke-width="2"/>
+      <rect x="152" y="20" width="24" height="84" fill="#C8D8D7"/>
+      <g id="car-dense-t2" transform="translate(72,104)">
+        <circle cx="22" cy="-11" r="11" fill="#0F1F1E"/>
+        <circle cx="68" cy="-11" r="11" fill="#0F1F1E"/>
+        <path d="M2,-12 L2,-26 L16,-28 L27,-44 L55,-44 L65,-28 L84,-26 L86,-12 Z" fill="#0C7A70" stroke="#0C7A70" stroke-width="4" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <g id="dense-frame-t3" transform="translate(770,252)">
+      <rect width="232" height="132" fill="#FFFFFF" stroke="#C8D8D7" stroke-width="2"/>
+      <path d="M0,104 H232" stroke="#A0BFBD" stroke-width="2"/>
+      <rect x="152" y="20" width="24" height="84" fill="#C8D8D7"/>
+      <g id="car-dense-t3" transform="translate(101,104)">
+        <circle cx="22" cy="-11" r="11" fill="#0F1F1E"/>
+        <circle cx="68" cy="-11" r="11" fill="#0F1F1E"/>
+        <path d="M2,-12 L2,-26 L16,-28 L27,-44 L55,-44 L65,-28 L84,-26 L86,-12 Z" fill="#0C7A70" stroke="#0C7A70" stroke-width="4" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+    <g id="dense-frame-t4" transform="translate(1016,252)">
+      <rect width="232" height="132" fill="#FFFFFF" stroke="#C8D8D7" stroke-width="2"/>
+      <path d="M0,104 H232" stroke="#A0BFBD" stroke-width="2"/>
+      <rect x="152" y="20" width="24" height="84" fill="#C8D8D7"/>
+      <g id="car-dense-t4" transform="translate(130,104)">
+        <circle cx="22" cy="-11" r="11" fill="#0F1F1E"/>
+        <circle cx="68" cy="-11" r="11" fill="#0F1F1E"/>
+        <path d="M2,-12 L2,-26 L16,-28 L27,-44 L55,-44 L65,-28 L84,-26 L86,-12 Z" fill="#0C7A70" stroke="#0C7A70" stroke-width="4" stroke-linejoin="round"/>
+      </g>
+    </g>
+
+  </g>
+
+  <!-- ============================================================
+       PLOT A - TWO SAMPLES (belongs to the sparse row above)
+       axes: t = 0..4 s at 88 px/s, d = 0..120 m at 52 px per 30 m
+       ============================================================ -->
+  <g id="plot-sparse">
+
+    <g id="plot-sparse-grid" stroke="#C8D8D7" stroke-width="2" fill="none">
+      <path d="M184,696 V488"/>
+      <path d="M272,696 V488"/>
+      <path d="M360,696 V488"/>
+      <path d="M448,696 V488"/>
+      <path d="M96,592 H448"/>
+      <path d="M96,488 H448"/>
+    </g>
+
+    <g id="plot-sparse-alternate-paths" fill="none" stroke="#7BBDB8" stroke-width="3" stroke-linecap="round">
+      <path d="M96,696 L448,488"/>
+      <path d="M96,696 Q190,514 448,488"/>
+      <path d="M96,696 Q366,678 448,488"/>
+    </g>
+
+    <g id="plot-sparse-axes" stroke="#505252" stroke-width="2" fill="none">
+      <path d="M84,696 H492"/>
+      <path d="M96,708 V452"/>
+      <path d="M96,696 v8"/>
+      <path d="M184,696 v8"/>
+      <path d="M272,696 v8"/>
+      <path d="M360,696 v8"/>
+      <path d="M448,696 v8"/>
+      <path d="M88,696 H96"/>
+      <path d="M88,592 H96"/>
+      <path d="M88,488 H96"/>
+    </g>
+    <polygon points="492,690 512,696 492,702" fill="#505252"/>
+    <polygon points="90,454 96,434 102,454" fill="#505252"/>
+
+    <g font-size="24" fill="#505252" text-anchor="middle">
+      <text x="96" y="730">0</text>
+      <text x="184" y="730">1</text>
+      <text x="272" y="730">2</text>
+      <text x="360" y="730">3</text>
+      <text x="448" y="730">4</text>
+    </g>
+    <g font-size="24" fill="#505252" text-anchor="end">
+      <text x="80" y="704">0</text>
+      <text x="80" y="600">60</text>
+      <text x="80" y="496">120</text>
+    </g>
+    <text x="522" y="705" font-size="24" fill="#505252">t (s)</text>
+    <text x="96" y="422" font-size="24" fill="#505252" text-anchor="middle">d (m)</text>
+
+    <g id="plot-sparse-samples" fill="#0C7A70" stroke="#F5FAFA" stroke-width="3">
+      <circle cx="96" cy="696" r="7"/>
+      <circle cx="448" cy="488" r="7"/>
+    </g>
+
+    <g id="plot-sparse-annotation" font-size="24" fill="#0F1F1E" font-weight="600">
+      <text x="40" y="770">&#916;d = 120 m,  &#916;t = 4 s</text>
+      <text x="40" y="802">v(t) = ?</text>
+    </g>
+
+  </g>
+
+  <!-- ============================================================
+       PLOT B - FIVE SAMPLES (belongs to the dense row above)
+       identical axis ranges and tick spacing to Plot A
+       ============================================================ -->
+  <g id="plot-dense">
+
+    <g id="plot-dense-grid" stroke="#C8D8D7" stroke-width="2" fill="none">
+      <path d="M804,696 V488"/>
+      <path d="M892,696 V488"/>
+      <path d="M980,696 V488"/>
+      <path d="M1068,696 V488"/>
+      <path d="M716,592 H1068"/>
+      <path d="M716,488 H1068"/>
+    </g>
+
+    <path id="plot-dense-fit" d="M716,696 L1068,488" fill="none" stroke="#0C7A70" stroke-width="4" stroke-linecap="round"/>
+
+    <g id="plot-dense-axes" stroke="#505252" stroke-width="2" fill="none">
+      <path d="M704,696 H1112"/>
+      <path d="M716,708 V452"/>
+      <path d="M716,696 v8"/>
+      <path d="M804,696 v8"/>
+      <path d="M892,696 v8"/>
+      <path d="M980,696 v8"/>
+      <path d="M1068,696 v8"/>
+      <path d="M708,696 H716"/>
+      <path d="M708,592 H716"/>
+      <path d="M708,488 H716"/>
+    </g>
+    <polygon points="1112,690 1132,696 1112,702" fill="#505252"/>
+    <polygon points="710,454 716,434 722,454" fill="#505252"/>
+
+    <g font-size="24" fill="#505252" text-anchor="middle">
+      <text x="716" y="730">0</text>
+      <text x="804" y="730">1</text>
+      <text x="892" y="730">2</text>
+      <text x="980" y="730">3</text>
+      <text x="1068" y="730">4</text>
+    </g>
+    <g font-size="24" fill="#505252" text-anchor="end">
+      <text x="700" y="704">0</text>
+      <text x="700" y="600">60</text>
+      <text x="700" y="496">120</text>
+    </g>
+    <text x="1142" y="705" font-size="24" fill="#505252">t (s)</text>
+    <text x="716" y="422" font-size="24" fill="#505252" text-anchor="middle">d (m)</text>
+
+    <g id="plot-dense-samples" fill="#0C7A70" stroke="#F5FAFA" stroke-width="3">
+      <circle cx="716" cy="696" r="7"/>
+      <circle cx="804" cy="644" r="7"/>
+      <circle cx="892" cy="592" r="7"/>
+      <circle cx="980" cy="540" r="7"/>
+      <circle cx="1068" cy="488" r="7"/>
+    </g>
+
+    <g id="plot-dense-annotation" font-size="24" fill="#0F1F1E" font-weight="600">
+      <text x="660" y="770">&#916;d = 120 m,  &#916;t = 4 s</text>
+      <text x="660" y="802">v = &#916;d/&#916;t = 30 m/s</text>
+    </g>
+
+  </g>
+
+</svg>

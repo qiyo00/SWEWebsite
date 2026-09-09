@@ -28,6 +28,7 @@
   --accent-amber: #9B6400;
   --accent-amber-bg: #F5E6C8;
   --accent-violet: #5B4AAF;
+  --accent-violet-light: #A095D3;
   --accent-violet-bg: #E5E0F7;
   --accent-blue: #1D6FA4;
   --accent-blue-bg: #D6E8F5;
@@ -51,12 +52,31 @@
   --fs-nav-logo: 12px;
   --fs-button: 12px;
   --fs-formula: 18px;
+  /* Explanatory text inside interactive widgets (row labels, hints,
+     canvas captions, slider labels/endpoints, readouts) — was riding
+     on --fs-caption/--fs-body-sm (10–12px), close to --fs-body (15px)
+     without claiming exact parity. Scoped to specific widget
+     selectors only, not reassigned to --fs-caption/--fs-body-sm
+     themselves, since those are shared sitewide (figure captions,
+     source notes, module cards, etc.) outside this task's scope. */
+  --fs-widget-text: 14px;
 
   /* Layout */
   --nav-height: 64px;
   --drawer-width: 200px;
   --ref-panel-width: 280px;
   --content-max-width: 760px;
+  /* Module pages: one shared width by default — headings, body copy,
+     callouts, figures, tables, and interactive panels all the same
+     measure. Once .module-main itself is wide enough to show that
+     full-width column WITH slack left over (see the @container query
+     on .module-main below), text narrows to --text-max-width for a
+     tighter reading line while figures/tables/panels stay at the
+     full breakout width — below that container width, the narrower
+     column would just be an arbitrary cutoff with no visible slack to
+     justify it, so everything stays unified instead. */
+  --content-breakout-width: 900px;
+  --text-max-width: 700px;
 
   /* Misc */
   --radius-sm: 4px;
@@ -317,6 +337,69 @@ h2 {
   border-color: var(--border-hover);
 }
 
+/* Restart-control tooltip (every interactive widget's reset/restart
+   button, plus the ARF scrubber's keyframe markers below). Same
+   pure-CSS [data-tooltip]::after pattern and visual language as the
+   collapsed drawer/ref-panel toggle tooltip further down this file
+   (dark pill, shown on :hover/:focus-visible only — focus-visible so
+   it appears on keyboard focus too, not just mouse hover, and doesn't
+   linger after a mouse click the way plain :focus would) — but
+   positioned above an inline button instead of beside a fixed one,
+   and not gated behind any .closed state, since these buttons are
+   always visible. Scoped to these specific classes rather than a
+   blanket [data-tooltip] selector so it can't double up with
+   .drawer-toggle/.ref-toggle, which have their own rule (see
+   .nav-drawer.closed [data-tooltip] below) already keyed to a
+   different data-tooltip value and position. */
+.arf-reset-btn,
+.valve-reset-btn,
+.uvc-reset-btn,
+.disp-reset-btn,
+.wave-reset-btn {
+  position: relative;
+}
+
+.arf-reset-btn::after,
+.valve-reset-btn::after,
+.uvc-reset-btn::after,
+.disp-reset-btn::after,
+.wave-reset-btn::after,
+.arf-mark::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(15, 31, 30, 0.9);
+  color: #fff;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.arf-reset-btn:hover::after,
+.arf-reset-btn:focus-visible::after,
+.valve-reset-btn:hover::after,
+.valve-reset-btn:focus-visible::after,
+.uvc-reset-btn:hover::after,
+.uvc-reset-btn:focus-visible::after,
+.disp-reset-btn:hover::after,
+.disp-reset-btn:focus-visible::after,
+.wave-reset-btn:hover::after,
+.wave-reset-btn:focus-visible::after,
+.arf-mark:hover::after,
+.arf-mark:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
+
 .button-row {
   display: flex;
   gap: 0.75rem;
@@ -471,10 +554,32 @@ h2 {
 }
 
 /* =========================================================
-   Learning Objectives (Home)
+   Learning Objectives (Home + module3-1.html intro)
+   On module pages this is the wide breakout column (its panel is a
+   boxed component, like a figure/table), centered in .module-main —
+   scoped so the Home page keeps its own .wrap-driven width.
    ========================================================= */
+.module-main .learning-objectives {
+  max-width: var(--content-breakout-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .learning-objectives h2 {
   margin: 0.5rem 0 1.25rem;
+}
+
+/* Only once .module-main has slack beyond the 900px breakout width
+   (see the @container note on .module-main) does the eyebrow/heading
+   narrow to a tighter reading measure — otherwise they'd just be an
+   arbitrary cutoff with no visible room to justify it. */
+@container (min-width: 960px) {
+  .module-main .learning-objectives .eyebrow,
+  .module-main .learning-objectives h2 {
+    max-width: var(--text-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .objectives-panel {
@@ -762,21 +867,37 @@ h2 {
   flex: 1;
   min-width: 0;
   padding: 2.5rem 3rem;
+  /* Lets the @container queries below key off .module-main's own
+     rendered width — not the viewport's — since the drawer/ref-panel
+     being open or collapsed changes how much room is actually left
+     for content independently of viewport size. A plain @media query
+     can't see that; only a container query, measured on the element
+     that's actually being squeezed by the sidebars, can. */
+  container-type: inline-size;
 }
 
 /* ---- Module-wide introduction (module3-1.html only) ---- */
 .module-intro {
+  max-width: var(--content-breakout-width);
+  margin: 0 auto 2.5rem;
   padding-bottom: 2rem;
-  margin-bottom: 2.5rem;
   border-bottom: 1px solid var(--border);
 }
 
 .module-intro h1 {
-  margin: 0.75rem 0 1rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.module-intro .body-text {
-  max-width: 62ch;
+/* See the matching query on .learning-objectives above. */
+@container (min-width: 960px) {
+  .module-intro .eyebrow,
+  .module-intro h1,
+  .module-intro .body-text {
+    max-width: var(--text-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .sections-panel {
@@ -816,15 +937,34 @@ h2 {
 }
 
 .module-section {
+  max-width: var(--content-breakout-width);
+  margin-left: auto;
+  margin-right: auto;
   padding-bottom: 1.5rem;
 }
 
 .module-section h2 {
-  margin: 0.5rem 0 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .module-section .body-text {
   margin-bottom: 1rem;
+}
+
+/* See the matching query on .learning-objectives above. Figures,
+   tables, and interactive panels are deliberately left out — they
+   stay at the full breakout width even once this narrows the text. */
+@container (min-width: 960px) {
+  .module-section .eyebrow,
+  .module-section h2,
+  .module-section h3,
+  .module-section .body-text,
+  .callout {
+    max-width: var(--text-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .interactive-panel {
@@ -850,13 +990,13 @@ h2 {
 }
 
 .wave-row-label {
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   font-weight: 600;
 }
 
 .wave-row-speed {
   font-family: var(--font-equation);
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
 }
 
@@ -868,7 +1008,7 @@ h2 {
   align-items: center;
   gap: 0.6rem;
   margin-bottom: 0.4rem;
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   white-space: nowrap;
 }
@@ -877,7 +1017,7 @@ h2 {
   flex: 1;
   min-width: 24px;
   height: 2px;
-  background: var(--accent-bg);
+  background: var(--accent-light);
   position: relative;
 }
 
@@ -889,15 +1029,15 @@ h2 {
   transform: translateY(-50%);
   border: 5px solid transparent;
   border-right: 0;
-  border-left: 6px solid var(--accent-bg);
+  border-left: 6px solid var(--accent-light);
 }
 
 .wave-row[data-wave="compressional"] .wave-propagation-arrow {
-  background: var(--accent-violet-bg);
+  background: var(--accent-violet-light);
 }
 
 .wave-row[data-wave="compressional"] .wave-propagation-arrow::after {
-  border-left-color: var(--accent-violet-bg);
+  border-left-color: var(--accent-violet-light);
 }
 
 .wave-canvas {
@@ -908,7 +1048,7 @@ h2 {
 }
 
 .wave-canvas-caption {
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin-top: 0.5rem;
 }
@@ -928,6 +1068,10 @@ h2 {
   letter-spacing: 0.02em;
 }
 
+.wave-reset-btn {
+  flex-shrink: 0;
+}
+
 .wave-slider-group {
   flex: 1;
   min-width: 0;
@@ -937,7 +1081,7 @@ h2 {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   color: var(--text-3);
   margin-bottom: 0.4rem;
 }
@@ -946,16 +1090,16 @@ h2 {
   font-weight: 600;
 }
 
-/* Soft/medium/stiff each get their own color so the label's color
-   itself hints at where the slider sits, not just its text. Medium is
-   a literal blend of the soft and stiff colors — a midpoint, not a
+/* Soft/borderline/stiff each get their own color so the label's color
+   itself hints at where the slider sits, not just its text. Borderline
+   is a literal blend of the soft and stiff colors — a midpoint, not a
    separate palette color — so it stays visually "between" as the
    slider moves. */
 #stiffnessValueLabel[data-level="soft"] {
   color: var(--accent);
 }
 
-#stiffnessValueLabel[data-level="medium"] {
+#stiffnessValueLabel[data-level="borderline"] {
   color: color-mix(in srgb, var(--accent), var(--accent-amber));
 }
 
@@ -1016,13 +1160,13 @@ h2 {
 .wave-slider-endpoints {
   display: flex;
   justify-content: space-between;
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin-top: 0.35rem;
 }
 
 .wave-note {
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin-top: 0.85rem;
 }
@@ -1036,16 +1180,28 @@ h2 {
 
 /* =========================================================
    ARF Push Pulse Interactive (module 3-2)
-   Layer reveal order: beam (top-down clip) -> focal zone
-   (fade/scale) -> displacement dot (pop) -> shear-wave pulse. xyz
-   axis, medium and probe are static. The tissue's funnel-shaped
-   cutout mask (see #arf-mask in the SVG) is clipped to the same
-   growing rect as the beam, so it only opens where the beam has
-   actually reached. The shear-wave arms are driven entirely from
-   script.js (initArfInteractive): the "hump" (particle displacement)
-   and its leading arrow are repositioned every frame so they travel
-   outward from the dot to the tissue edge, then settle back to a
-   flat line — reused for both the intro pulse and every click.
+   Idle (mainT = 0): only the probe/tissue background art is visible
+   — beam, focal zone, dot, and their labels all start hidden below
+   (the "Idle (0%) state" rules). The whole reveal — beam clips in,
+   focal zone fades/scales in, the dot pops, then the shear wave
+   travels to the tissue edge — is a single scrubbable JS timeline
+   driven entirely from script.js (initArfInteractive): render(t) sets
+   every layer's height/opacity/transform directly from one progress
+   value, in place of the CSS @keyframes (arfBeamReveal/
+   arfFadeScaleIn/arfDotPop/arfFadeIn) this used to run on when it
+   only ever autoplayed once — those are gone now that the same
+   sequence needs to play, pause, and scrub to any point, which a
+   handful of independently-delayed CSS animations can't do in sync
+   with a slider the way one JS-driven value trivially can.
+   No autoplay: idle on load, started by the play button or the
+   scrubber (#arfScrubber) or the keyframe markers (#arfMarks), and
+   independently re-fireable by clicking the tissue once the dot has
+   appeared — see the script.js comment above initArfInteractive for
+   the full timeline and how the scrubbed "main" pulse and click-fired
+   "extra" pulses are threaded into the same shear-wave path together.
+   The tissue's funnel-shaped cutout mask (see #arf-mask in the SVG)
+   is clipped to the beam rect's growing footprint, so it only opens
+   as far as the beam has (re)drawn in.
    ========================================================= */
 .arf-interactive {
   padding-top: 0.875rem;
@@ -1121,7 +1277,13 @@ h2 {
   fill: #0c7a70;
 }
 
-/* ---- Base (hidden) state for the animated layers ---- */
+/* ---- Idle (0%) state: only the probe/tissue background art is
+   visible — beam, focal zone, dot, and their labels start hidden.
+   script.js owns every value from here on (height/opacity/transform),
+   setting them directly from a single scrubbable progress value each
+   frame — no CSS keyframes/.playing class, so there's exactly one
+   thing (script.js's render()) that can put a layer on screen, and
+   play/scrub/click can never disagree about what state it's in. ---- */
 .arf-svg #arfBeamRevealRect {
   height: 0;
 }
@@ -1146,98 +1308,13 @@ h2 {
   opacity: 0;
 }
 
-/* ---- Playing state: staggered reveal ---- */
-.arf-stage.playing .arf-svg #arfBeamRevealRect {
-  animation: arfBeamReveal 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.arf-stage.playing .arf-svg #focalZone {
-  animation: arfFadeScaleIn 0.5s ease-out 1.05s forwards;
-}
-
-.arf-stage.playing .arf-svg #dot {
-  animation: arfDotPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s forwards;
-}
-
-.arf-stage.playing .arf-label-group.arf-label-beam {
-  animation: arfFadeIn 0.4s ease-out 1.15s forwards;
-}
-
-.arf-stage.playing .arf-label-group.arf-label-focal {
-  animation: arfFadeIn 0.4s ease-out 1.55s forwards;
-}
-
-/* The shear-wave pulse timing is dynamic (JS-driven, replayable per
-   click), so its label fades in via inline style from script.js
-   rather than a fixed animation-delay. */
-
-/* ---- Reduced motion: show the end state instantly, no click pulses ---- */
-.arf-stage.playing.no-motion .arf-svg #arfBeamRevealRect,
-.arf-stage.playing.no-motion .arf-svg #focalZone,
-.arf-stage.playing.no-motion .arf-svg #dot,
-.arf-stage.playing.no-motion .arf-label-group.arf-label-beam,
-.arf-stage.playing.no-motion .arf-label-group.arf-label-focal {
-  animation: none;
-}
-
-.arf-stage.playing.no-motion .arf-svg #arfBeamRevealRect {
-  height: 1080.83px;
-}
-
-.arf-stage.playing.no-motion .arf-svg #focalZone {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.arf-stage.playing.no-motion .arf-svg #dot {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.arf-stage.playing.no-motion .arf-label-group.arf-label-beam,
-.arf-stage.playing.no-motion .arf-label-group.arf-label-focal {
-  opacity: 1;
-}
-
-@keyframes arfBeamReveal {
-  to {
-    height: 1080.83px;
-  }
-}
-
-@keyframes arfFadeScaleIn {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes arfDotPop {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-
-  70% {
-    opacity: 1;
-    transform: scale(1.25);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes arfFadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-/* ---- Controls row ---- */
+/* ---- Controls row: play/reset buttons + scrubber on one line,
+   the click-to-fire hint always on its own line below (flex-basis:
+   100% forces the wrap regardless of viewport width, rather than
+   only past a breakpoint). ---- */
 .arf-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.875rem;
   margin-top: 1.25rem;
@@ -1251,15 +1328,164 @@ h2 {
   font-size: var(--fs-body-sm);
 }
 
+.arf-scrubber-group {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 60px;
+}
+
 .arf-hint {
-  font-size: var(--fs-body-sm);
+  flex-basis: 100%;
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
 }
 
-@media (max-width: 520px) {
-  .arf-controls {
-    flex-wrap: wrap;
-  }
+/* ---- Scrubber keyframe markers + custom thumb: four explicit
+   layers, bottom to top:
+     .arf-track-line (the plain line, z1)
+     < .wave-slider (the real <input>, z2 — an invisible hit-layer
+       now: its native track AND thumb are both fully hidden below,
+       kept purely for its drag/keyboard/value behavior)
+     < .arf-marks (the dots, z3, centered right on the track line —
+       same small outlined-dot language as .bullet/.drawer-bullet
+       elsewhere on the site: 8px circle, 1.5px border, fills solid
+       with --accent on hover/focus, identified by data-tooltip/
+       aria-label rather than a digit)
+     < #arfThumb (z4, purely decorative — "the big dot" that actually
+       visibly moves, pointer-events:none so it never blocks the real
+       input underneath).
+   This split exists because a native range input's track and thumb
+   are two parts of the SAME element, inseparable in the stacking
+   order (a pseudo-element like ::-webkit-slider-thumb can't be given
+   a z-index that escapes its own host's stacking context) — there's
+   no way to sandwich the dots between "just the track" and "just the
+   thumb" of one input. Splitting the VISUAL thumb out into its own
+   element (kept in sync with the input's value by script.js's
+   syncScrubber()) is what finally lets all four things stack exactly
+   as asked: track at the bottom, dots on top of the track, the
+   moving thumb on top of the dots — while an interactive element
+   (the real input) still needs to sit ABOVE the dots for its own
+   dragging to work reliably everywhere except exactly on a dot,
+   where the dot (being higher still) correctly takes the click/hover
+   instead.
+   pointer-events:none on .arf-track-line/.arf-marks/#arfThumb so
+   clicks/drags on the bare track still reach the real input beneath
+   the marks, re-enabled per-dot so the marks themselves stay
+   clickable. Left offset is precomputed from each marker's fixed
+   time / TOTAL_DURATION, since the timeline's constants are static;
+   the first/last dots anchor flush to the track's own ends (both
+   themselves and their tooltip bubble) instead of centering on their
+   0%/100% position, which would otherwise hang half off the track.
+   Clicking a dot seeks the scrubber to that moment — "chapter
+   points" so users can jump straight back to a specific stage
+   instead of only dragging freehand. #arfMark5 (the click-for-extra-
+   waves waypoint) starts hidden and is revealed the first time the
+   user actually fires an extra pulse by clicking the tissue. ---- */
+.arf-track-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.arf-scrubber-group .wave-slider {
+  position: relative;
+  z-index: 2;
+  background: transparent; /* the visible track is .arf-track-line */
+}
+
+.arf-scrubber-group .wave-slider::-moz-range-track {
+  background: transparent;
+}
+
+.arf-scrubber-group .wave-slider::-webkit-slider-thumb {
+  background: transparent;
+  box-shadow: none;
+}
+
+.arf-scrubber-group .wave-slider::-moz-range-thumb {
+  background: transparent;
+  box-shadow: none;
+}
+
+.arf-marks {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px; /* matches .arf-track-line's own track height */
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* The visible thumb — a plain div, not part of the <input>, positioned
+   by script.js's syncScrubber() every time mainT changes (playing,
+   seeking, or reset) so it always tracks the real input's value. */
+.arf-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(12, 122, 112, 0.15);
+  transition: box-shadow var(--transition);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.arf-scrubber-group .wave-slider:hover ~ .arf-thumb,
+.arf-scrubber-group .wave-slider:focus-visible ~ .arf-thumb {
+  box-shadow: 0 0 0 3px rgba(12, 122, 112, 0.15);
+}
+
+.arf-mark {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-hover);
+  background: var(--card);
+  padding: 0;
+}
+
+.arf-marks .arf-mark:first-child {
+  transform: translateY(-50%);
+}
+
+.arf-marks .arf-mark:last-child {
+  transform: translate(-100%, -50%);
+}
+
+.arf-marks .arf-mark:first-child::after {
+  left: 0;
+  transform: translateX(0);
+}
+
+.arf-marks .arf-mark:last-child::after {
+  left: auto;
+  right: 0;
+  transform: translateX(0);
+}
+
+.arf-mark:hover,
+.arf-mark:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.arf-mark[hidden] {
+  display: none;
 }
 
 /* =========================================================
@@ -1306,7 +1532,7 @@ h2 {
 }
 
 .valve-row-label {
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   font-weight: 600;
 }
 
@@ -1326,6 +1552,28 @@ h2 {
 
 .valve-hit-area {
   cursor: pointer;
+}
+
+/* ---- Anatomical labels: hidden until that heart's valve has closed ----
+   Each heart's leader lines + text live in their own <g class="valve-label">
+   so one valve's playback never reveals the other's. script.js adds
+   .revealed when the closure morph finishes and strips it again on reset,
+   which is also the idle state. Opacity is the right tool here (unlike the
+   valve motion itself, which is a real geometric morph) — the label isn't
+   moving, it's arriving. */
+.valve-svg .valve-label {
+  opacity: 0;
+  transition: opacity 0.32s ease-out;
+}
+
+.valve-svg .valve-label.revealed {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .valve-svg .valve-label {
+    transition: none;
+  }
 }
 
 /* ---- Base (hidden) state for the animated layers ---- */
@@ -1383,7 +1631,7 @@ h2 {
 }
 
 .valve-hint {
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
 }
 
@@ -1476,8 +1724,15 @@ h2 {
    Wave Types Interactive above it — reuses .wave-slider for both
    range inputs rather than redefining thumb/track styling.
    ========================================================= */
+/* One shared key for both panels, shown once below the toolbar hint —
+   the two systems use the same shear-wave marker, so listing it twice
+   (once per panel) was redundant. */
+.uvc-legend-shared {
+  margin-bottom: 0.85rem;
+}
+
 .uvc-toolbar-hint {
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin: 0 0 1.25rem;
   padding-bottom: 1rem;
@@ -1554,7 +1809,7 @@ h2 {
 }
 
 .uvc-row-title {
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   font-weight: 600;
 }
 
@@ -1613,7 +1868,7 @@ h2 {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   color: var(--text-3);
   margin-bottom: 0.35rem;
 }
@@ -1625,7 +1880,7 @@ h2 {
 }
 
 .uvc-stage-tag {
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin-bottom: 0.35rem;
 }
@@ -1643,7 +1898,7 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 1.25rem;
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin-top: 0.6rem;
 }
@@ -1669,7 +1924,7 @@ h2 {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.35rem 1.25rem;
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin-top: 0.35rem;
 }
@@ -1704,7 +1959,7 @@ h2 {
 }
 
 .uvc-notes p {
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin: 0;
 }
@@ -1762,7 +2017,7 @@ h2 {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   color: var(--text-3);
   margin-bottom: 0.35rem;
 }
@@ -1796,14 +2051,18 @@ h2 {
 }
 
 .tofv-plot-caption {
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   margin-top: 0.5rem;
 }
 
 .tofv-readouts {
   flex-shrink: 0;
-  width: 168px;
+  /* Widened from 168px so .tofv-readout-label's nowrap "Young's
+     modulus (E)" still fits at the larger --fs-widget-text size
+     instead of overflowing. .tofv-chart-col (flex: 1) absorbs the
+     ~50px difference — still ~600px+ on the 900px breakout column. */
+  width: 220px;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -1818,7 +2077,7 @@ h2 {
 
 .tofv-readout-label {
   display: block;
-  font-size: var(--fs-label);
+  font-size: var(--fs-widget-text);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -1829,7 +2088,7 @@ h2 {
 .tofv-readout-value {
   display: block;
   font-family: var(--font-equation);
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   font-weight: 600;
 }
 
@@ -1978,7 +2237,7 @@ h2 {
 }
 
 .disp-wave-row-label {
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   font-weight: 600;
   margin-bottom: 0.4rem;
 }
@@ -2047,7 +2306,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   font-weight: 600;
   color: var(--text-3);
 }
@@ -2103,7 +2362,7 @@ h2 {
 }
 
 .aniso-panel-title {
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-widget-text);
   font-weight: 600;
   color: var(--text-3);
 }
@@ -2121,8 +2380,9 @@ h2 {
    one moves" teaching point even before either number is read. */
 .aniso-readout-box {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.55rem;
+  gap: 0.3rem 0.55rem;
   margin-top: 0.65rem;
   border: 1px solid var(--border);
   border-left: 3px solid currentColor;
@@ -2139,9 +2399,16 @@ h2 {
 }
 
 .aniso-readout-label {
-  flex: 1;
+  /* flex-basis: auto (not the 0% that `flex: 1` shorthand sets) —
+     with a 0 basis this item's hypothetical size for the wrap
+     algorithm's line-packing decision is 0, so the browser still
+     tries to fit it on the same line as the value/badge and only
+     shrinks it afterward, letting its text overflow into them
+     instead of actually wrapping to its own line. auto basis makes
+     the wrap decision see its real content width. */
+  flex: 1 1 auto;
   min-width: 0;
-  font-size: var(--fs-label);
+  font-size: var(--fs-widget-text);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-3);
@@ -2229,7 +2496,7 @@ h2 {
 }
 
 .aniso-thumb-caption {
-  font-size: var(--fs-caption);
+  font-size: var(--fs-widget-text);
   color: var(--text-2);
   white-space: nowrap;
 }
@@ -2264,7 +2531,8 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin: 1.5rem 0;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .callout-label {
@@ -2323,7 +2591,8 @@ h2 {
 
 .module-section h3 {
   font-size: 18px;
-  margin: 2.25rem 0 0.75rem;
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
 }
 
 /* =========================================================
@@ -2389,6 +2658,30 @@ h2 {
 
 .figure-image-wrap .figure-image {
   max-width: none;
+}
+
+/* The 3-3 Figure 1 source PNG carries transparent margins (artwork spans
+   3.917%-97.292% of its width), so the image is scaled out past the wrap to
+   land the artwork edges on the caption edges below it. Overflow is clipped
+   only to keep the transparent overhang from widening the page. */
+.figure-image-wrap.figure-bleed {
+  overflow: hidden;
+}
+
+.figure-image-wrap.figure-bleed .figure-image {
+  width: 107.095%;
+  /* Top/bottom pull the row tags in against the artwork. Percentage margins
+     resolve against the wrap's width, so the transparent bands (12.38% and
+     10.82% of the image's own height) are re-expressed here as a fraction of
+     that width, less ~15px left as breathing room. */
+  margin: -3.5% 0 -2.92% -4.194%;
+}
+
+/* The negative top margin slides the image's transparent band over the tag
+   above it; keep the tags on top so they can never be covered. */
+.figure-image-wrap.figure-bleed .figure-row-tag {
+  position: relative;
+  z-index: 1;
 }
 
 .figure-row-tag {
@@ -2526,16 +2819,12 @@ h2 {
    laid out as a normal stacked list (divider between entries) rather
    than a card grid, plus a live search box that filters .eqg-item
    entries (see initEquationsGlossarySearch in script.js).
-   Without a right-hand reference panel to narrow it, .module-main runs
-   much wider here than on the module pages, which let every line of
-   body copy (and the search status line) stretch edge-to-edge on wide
-   screens. #module-3 caps the whole section back to the site's normal
-   reading width so long lines wrap instead.
+   #module-3 is itself a .module-section, so it already inherits that
+   rule's breakout width and centering — no page-specific override
+   needed here. (Its .eq-item/.glossary-item entries are left at the
+   full breakout width, same as on the reference panel, rather than
+   the narrower text column.)
    ========================================================= */
-#module-3 {
-  max-width: var(--content-max-width);
-}
-
 .eqg-search-wrap {
   margin: 1.5rem 0;
 }

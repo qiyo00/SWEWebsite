@@ -64,15 +64,11 @@
           echocardiography.</p>
 
         <div class="figure-placeholder has-image">
-          <div class="figure-image-wrap">
-            <span class="figure-row-tag">Low frame rate — 1 frame / 10 s</span>
-            <img class="figure-image" src="mrp-June/images/3-3-1long.png"
-              alt="A car crosses a city skyline, captured at t = 0 s, 10 s, and 20 s. With only three widely spaced frames, the displacement and velocity (Δd = ?, v = Δd/Δt = ?) cannot be determined from the resulting position-versus-time plot.">
-          </div>
-          <div class="figure-image-wrap">
-            <span class="figure-row-tag">High frame rate — 1 frame / 1 s</span>
-            <img class="figure-image" src="mrp-June/images/3-3-1short.png"
-              alt="The same car crossing the skyline, now captured at t = 0 s, 1 s, and 2 s. The closely spaced frames trace out a clear position-versus-time slope, giving Δd = 60 m and v = Δd/Δt = 30 m/s.">
+          <div class="figure-image-wrap figure-bleed">
+            <span class="figure-row-tag">Low frame rate: ≈0.33 fps (1 frame every 3 s)</span>
+            <img class="figure-image" src="mrp-June/images/3-3-1-v2.png"
+              alt="Two rows of video frames showing a car crossing a city skyline, sharing a common time axis marked t = 0 s to t = 3 s. The top row captures the scene only at t = 0 s and t = 3 s; by that second frame the car has already left the field of view, so its position-versus-time plot stays empty and neither Δd nor v = Δd/Δt can be determined. The bottom row captures a frame every second, catching the car at t = 0, 1 and 2 s, and its plot traces a straight line through those positions, giving Δd = 60 m and v = Δd/Δt = 30 m/s.">
+            <span class="figure-row-tag">High frame rate: 1 fps (1 frame every 1 s)</span>
           </div>
           <p class="figure-caption"><strong class="figure-caption-label">Figure 1.</strong> Tracking a <strong
               style="color: var(--accent);">car</strong>'s position across video frames at a low frame rate versus a
@@ -104,6 +100,13 @@
               interest — each pass holds briefly so you can read how many wave-front positions it managed to
               sample before it resets and crosses again. The two panels play independently, so you can pause one
               to inspect it while the other keeps looping.</p>
+            <div class="uvc-legend uvc-legend-shared" aria-hidden="true">
+              <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-wave"></span>shear wave</span>
+              <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-scanline"></span>scan
+                line</span>
+              <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-sample"></span>frame
+                sample</span>
+            </div>
 
             <div class="uvc-scene">
               <div class="uvc-row" data-mode="conventional">
@@ -111,19 +114,13 @@
                   <div class="uvc-row-header">
                     <span class="uvc-row-title" style="color: var(--accent-violet);">Conventional focused
                       ultrasound</span>
-                    <div class="uvc-legend" aria-hidden="true">
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-wave"></span>shear
-                        wave</span>
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-scanline"></span>scan
-                        line</span>
-                    </div>
                   </div>
 
                   <div class="uvc-row-toolbar">
                     <button class="icon-btn uvc-play-toggle" id="convPlayToggle" type="button"
                       aria-label="Play conventional panel animation" aria-pressed="false">▶</button>
                     <button class="icon-btn uvc-reset-btn" id="convResetBtn" type="button"
-                      aria-label="Reset conventional panel animation">⟲</button>
+                      aria-label="Reset conventional panel animation" data-tooltip="Restart animation">⟲</button>
                   </div>
 
                   <div class="uvc-sliders">
@@ -169,19 +166,13 @@
                 <div class="uvc-row-main">
                   <div class="uvc-row-header">
                     <span class="uvc-row-title" style="color: var(--accent);">Ultrafast plane-wave ultrasound</span>
-                    <div class="uvc-legend" aria-hidden="true">
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-wave"></span>shear
-                        wave</span>
-                      <span class="uvc-legend-item"><span class="uvc-legend-swatch uvc-legend-sample"></span>frame
-                        sample</span>
-                    </div>
                   </div>
 
                   <div class="uvc-row-toolbar">
                     <button class="icon-btn uvc-play-toggle" id="ultraPlayToggle" type="button"
                       aria-label="Play ultrafast panel animation" aria-pressed="false">▶</button>
                     <button class="icon-btn uvc-reset-btn" id="ultraResetBtn" type="button"
-                      aria-label="Reset ultrafast panel animation">⟲</button>
+                      aria-label="Reset ultrafast panel animation" data-tooltip="Restart animation">⟲</button>
                   </div>
 
                   <div class="uvc-sliders">
@@ -209,7 +200,6 @@
                     aria-label="Ultrafast imaging stage: a light field of dots covers the full width at once every frame, while an open circle marking the shear wave front moves continuously left to right. A filled dot is stamped at the wave front's position on nearly every frame, tracing a dense trail."></canvas>
 
                   <div class="uvc-readout">
-                    <span>Frame interval: <strong id="ultraFrameRateReadout">0.20 ms</strong></span>
                     <span>Samples captured: <strong id="ultraSampleCountReadout">0</strong></span>
                   </div>
 
@@ -411,8 +401,8 @@
             kPa.</p>
         </div>
         <div class="eq-item">
-          <p class="eq-name">Conventional frame time (line-by-line imaging)</p>
-          <p class="eq-formula">frame time ≈ (2d / c₀) × N</p>
+          <p class="eq-name">Conventional frame interval (line-by-line imaging)</p>
+          <p class="eq-formula">frame interval ≈ (2d / c₀) × N</p>
           <p class="eq-note">d = imaging depth, c₀ = speed of sound in tissue (~1,540 m/s), N = number of scan lines.
           </p>
         </div>
@@ -452,6 +442,12 @@
           <p class="glossary-term">Frame rate</p>
           <p class="glossary-def">Number of image frames acquired per second (fps). Must exceed roughly 1,000 fps to
             resolve shear wave propagation, versus 30–100 fps for conventional line-by-line imaging.</p>
+        </div>
+        <div class="glossary-item">
+          <p class="glossary-term">Frame interval</p>
+          <p class="glossary-def">The time between the start of successive frames (frame interval = 1 / frame rate).
+            Must be under roughly 1 ms to resolve shear wave propagation, versus 10–33 ms for conventional
+            line-by-line imaging.</p>
         </div>
         <div class="glossary-item">
           <p class="glossary-term">Lateral resolution</p>
